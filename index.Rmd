@@ -1,6 +1,6 @@
 ---
-title: "My Final Project Template"
-author: Your name here
+title:  "Statistical Comparision of NASA-TROPOMI - Satellite and GEOS-CF - Model Data"
+author: Shruti Jagini 
 subtitle: Subtitle here if desired
 ---
 
