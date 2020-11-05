@@ -398,28 +398,19 @@ div.tocify {
 </div>
 <div id="geos-cf" class="section level4">
 <h4>GEOS-CF</h4>
-<p>The GEOS-Chem is a global 3-D model which is used for monitoring atmospheric chemistry, it is driven by assimilated meteorological observations from the Goddard Earth Observing System (GEOS).This model takes into account about 220 reactive species and 720 reactions. GEOS-CF works by taking into account atmospheric dynamics such as wind speed and chemistry of pollutants (such as their chemical reactions, dispersion, reactivity) in predicting their concentrations</p>
+<p>The GEOS-Chem is a global 3-D model which is used for monitoring atmospheric chemistry, it is driven by assimilated meteorological observations from the Goddard Earth Observing System (GEOS).This model takes into account about 220 reactive species and 720 reactions. GEOS-CF works by taking into account atmospheric dynamics such as wind speed and chemistry of pollutants (such as their chemical reactions, dispersion, reactivity) in predicting their concentrations.</p>
+<p>So, since satellite captures real time data and model predicts data based on factors, the goal of this project is to analyze how accurate the model data is to satellite data.</p>
 </div>
 </div>
 <div id="materials-and-methods" class="section level1">
 <h1>Materials and methods</h1>
-<p>[~ 200 words]</p>
-<p>Narrative: Clear narrative description of the data sources and methods. Includes data from at least two sources that were integrated / merged in R.</p>
-<p>Code: The code associated with the project is well organized and easy to follow. Demonstrates mastery of R graphics and functions.</p>
-<p>Data: The underlying data are publicly accessible via the web and downloaded/accessed within the Rmd script. If you want to use your own data, you must make it available on a website (e.g. Figshare) so that others are able to re-run your code.</p>
-<p>You can do bullets like this:</p>
 <ul>
-<li>The first most important thing</li>
-<li>The second most important thing</li>
-<li>The third most important thing</li>
+<li><p>The NASA-TROPOMI satellite data for analyzing NO<sub>2</sub> concentration is obtained from <a href="https://disc.gsfc.nasa.gov/">GES-DISC Website</a>. After accessing the website, I have specified the latitude, longitude boundaries, parameters that I wish to sample (quality index, surface pressure.. etc) and the time period in which we want to obtain the data. Once this is done,files were downloaded in .txt format. These files have been further converted to .mat files using a python script. The .mat files generated from the python script were further used in R for analysis.</p></li>
+<li><p>The NASA-TROPOMI satellite data for analyzing CO concentration is obtained from <a href="https://disc.gsfc.nasa.gov/">GES-DISC Website</a>. After accessin the website,I have performed the same procedure as conducted with the NO<sub>2</sub> data.</p></li>
+<li><p>The GEOS-CF model data for both NO<sub>2</sub> and CO is obtained from <a href="https://portal.nccs.nasa.gov/datashare/gmao/geos-cf/v1/das/">GEOS-CF Website</a></p></li>
+<li><p>MODIS data for analyzing wildfires is obtained form <a href="https://firms.modaps.eosdis.nasa.gov/download/">MODIS Website</a> and from the <a href="https://worldview.earthdata.nasa.gov/">World View Website</a>. After accessing the website, I have specified the latitude and longitude boundaries, type of satellite, and file formats. I chose the file format to csv.I further used this csv file for analysis in R.</p></li>
 </ul>
-<p>You can do numbers like this:</p>
-<ol style="list-style-type: decimal">
-<li>The first most important thing</li>
-<li>The second most important thing</li>
-<li>The third most important thing</li>
-</ol>
-<p>See <a href="http://rmarkdown.rstudio.com/">http://rmarkdown.rstudio.com/</a> for all the amazing things you can do.</p>
+<p>###Analysisng CO and NO<sub>2</sub> data (.mat) files in R The .mat files read in R</p>
 <p>Here’s my first code chunk.</p>
 <pre class="r"><code>1+2</code></pre>
 <pre><code>## [1] 3</code></pre>

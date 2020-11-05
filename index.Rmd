@@ -12,33 +12,38 @@ Agency (ESA). The tropospheric monitoring instrumentcovers the wavelength of ult
 CH 4 , CO, formaldehyde, aerosols and clouds.
 
 #### GEOS-CF
-The GEOS-Chem is a global 3-D model which is used for monitoring atmospheric chemistry, it is driven by assimilated meteorological observations from the Goddard Earth Observing System (GEOS).This model takes into account about 220 reactive species and 720 reactions. GEOS-CF works by taking into account atmospheric dynamics such as wind speed and chemistry of pollutants (such as their chemical reactions, dispersion, reactivity) in predicting their concentrations
+The GEOS-Chem is a global 3-D model which is used for monitoring atmospheric chemistry, it is driven by assimilated meteorological observations from the Goddard Earth Observing System (GEOS).This model takes into account about 220 reactive species and 720 reactions. GEOS-CF works by taking into account atmospheric dynamics such as wind speed and chemistry of pollutants (such as their chemical reactions, dispersion, reactivity) in predicting their concentrations. 
+
+So, since satellite captures real time data and model predicts data based on factors, the goal of this project is to analyze how accurate the model data is to satellite data. 
 
 # Materials and methods
 
-[~ 200 words]
+* The NASA-TROPOMI satellite data for analyzing NO~2~ concentration is obtained from  [GES-DISC Website](https://disc.gsfc.nasa.gov/). After accessing the website, I have specified the latitude, longitude boundaries, parameters that I wish to sample (quality index, surface pressure.. etc) and the time period in which we want to obtain the data. Once this is done,files were downloaded in .txt format. These files have been further converted to .mat files using a python script. The .mat files generated from the python script were further used in R for analysis. 
 
-Narrative: Clear narrative description of the data sources and methods. Includes data from at least two sources that were integrated / merged in R.
+* The NASA-TROPOMI satellite data for analyzing CO concentration is obtained from  [GES-DISC Website](https://disc.gsfc.nasa.gov/). After accessing the website,I have performed the same procedure as conducted with the NO~2~ data. 
 
-Code: The code associated with the project is well organized and easy to follow. Demonstrates mastery of R graphics and functions.
+* The GEOS-CF model data for both  NO~2~ and CO is obtained from [GEOS-CF Website](https://portal.nccs.nasa.gov/datashare/gmao/geos-cf/v1/das/). After accessing the website I chose the day on which I wanted to obtain the data. The daat are in the form of .h5 files. By default GEOS-CF data is provided at latitude and longitude ranges of -90 to 90 and -180 to 180 respectively. 
 
-Data: The underlying data are publicly accessible via the web and downloaded/accessed within the Rmd script. If you want to use your own data, you must make it available on a website (e.g. Figshare) so that others are able to re-run your code.
+* MODIS data for analyzing wildfires is obtained form [MODIS Website](https://firms.modaps.eosdis.nasa.gov/download/) and from the [World View Website](https://worldview.earthdata.nasa.gov/). After accessing the website, I have specified the latitude and longitude boundaries, type of satellite, and file formats. I chose the file format to csv.I further used this csv file for analysis in R. 
 
-You can do bullets like this:
+#### Analysisng CO and NO~2~ data (.mat) files in R 
 
-* The first most important thing
-* The second most important thing
-* The third most important thing
+The .mat files read in R were further filtered based on quality index. Once this is done, the data is converted to ordinary datetime format from matlab datetime format using the "lubridate" package and ymd() function. This makes the data into a readable format. 
 
-You can do numbers like this:
+#### Analysisng MODIS fire data 
 
-1. The first most important thing
-2. The second most important thing
-3. The third most important thing
+The MODIS fire data are in the form of csv files, once these files are read into R, they are in the form of data frames, the number of times a brightness value occurs in a day is taken as a fire count for that day. Number of fire counts on each day are obtained. Based on these fire counts I have filtered the study dates and would be further focusing on them. 
 
-See [http://rmarkdown.rstudio.com/](http://rmarkdown.rstudio.com/) for all the amazing things you can do.
+#### Analysing GEOS-CF model data for NO~2~  and CO 
 
+GEOS-CF model data are in the form of .h5 files, the data in these files is in the form of a meshgrid/ matrix. Longitude and Latitude values  are distributed in the form of a grid, and each point in the grid (longitude,latitude) pair has a concentration value. 
+GEOS-CF model data on specific dates is chosen based on the MODIS data, the days on which MODIS fire counts were found to be significant were taken into consideration. 
 
+#### Data Representation 
+
+Data for TROPOMI CO and NO~2 are represented in the from of maps with longitudes varying on x-axis and latitudes varying on y-axis. GEOS-CF model data is also represented in the same way. 
+
+Data from
 Here's my first code chunk.
 ```{r}
 1+2
