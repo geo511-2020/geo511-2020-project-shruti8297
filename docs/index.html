@@ -394,7 +394,7 @@ div.tocify {
 <p>Wildfires in California occur regularly, these have significantly contributed in shaping the nature over the past century. Southern California is the highest fire prone regions of the world, its predominant forests have evolved to thrive on the phenomenon of wildfires. Over the past decades the fires have caused significant damage and loss of both property, human and animal life. As a result of these wildfires, a number of pollutants such as, oxides of nitrogen, oxides of sulfur, methane, carbon monoxide are released into the atmosphere. This project deals with statistical comparison between the satellite data (NASA-TROPOMI), and a geographical model data (GEOS-CF) with respect to NO2 and CO concentrations emitted from California wildfires.</p>
 <div id="nasa-tropomi" class="section level4">
 <h4>NASA-TROPOMI</h4>
-<p>The TROPOspheric Monitoring Instrument (TROPOMI) is a satellite instrument which is on board the Copernicus Sentinel-5 Precursor satellite. The Sentinel-5 Precursor (S5P) is launched by the European Space Agency (ESA). The tropospheric monitoring instrumentcovers the wavelength of ultraviolet-visible (270 nm to 495 nm), near infrared region (675 nm to 775 nm) and shortwave infrared (2305 nm - 2385 nm).This instrument provides measurements on concentrations of various pollutants and components of atmosphere like ozone, NO 2 , SO 2 , CH 4 , CO, formaldehyde, aerosols and clouds.</p>
+<p>The TROPOspheric Monitoring Instrument (TROPOMI) is a satellite instrument which is on board the Copernicus Sentinel-5 Precursor satellite. The Sentinel-5 Precursor (S5P) is launched by the European Space Agency (ESA). The tropospheric monitoring instrument covers the wavelength of ultraviolet-visible (270 nm to 495 nm), near infrared region (675 nm to 775 nm) and shortwave infrared (2305 nm - 2385 nm).This instrument provides measurements on concentrations of various pollutants and components of atmosphere like ozone, NO<sub>2</sub> , SO<sub>2</sub>, CH<sub>4</sub> , CO, formaldehyde, aerosols and clouds.</p>
 </div>
 <div id="geos-cf" class="section level4">
 <h4>GEOS-CF</h4>
@@ -406,12 +406,26 @@ div.tocify {
 <h1>Materials and methods</h1>
 <ul>
 <li><p>The NASA-TROPOMI satellite data for analyzing NO<sub>2</sub> concentration is obtained from <a href="https://disc.gsfc.nasa.gov/">GES-DISC Website</a>. After accessing the website, I have specified the latitude, longitude boundaries, parameters that I wish to sample (quality index, surface pressure.. etc) and the time period in which we want to obtain the data. Once this is done,files were downloaded in .txt format. These files have been further converted to .mat files using a python script. The .mat files generated from the python script were further used in R for analysis.</p></li>
-<li><p>The NASA-TROPOMI satellite data for analyzing CO concentration is obtained from <a href="https://disc.gsfc.nasa.gov/">GES-DISC Website</a>. After accessin the website,I have performed the same procedure as conducted with the NO<sub>2</sub> data.</p></li>
-<li><p>The GEOS-CF model data for both NO<sub>2</sub> and CO is obtained from <a href="https://portal.nccs.nasa.gov/datashare/gmao/geos-cf/v1/das/">GEOS-CF Website</a></p></li>
+<li><p>The NASA-TROPOMI satellite data for analyzing CO concentration is obtained from <a href="https://disc.gsfc.nasa.gov/">GES-DISC Website</a>. After accessing the website,I have performed the same procedure as conducted with the NO<sub>2</sub> data.</p></li>
+<li><p>The GEOS-CF model data for both NO<sub>2</sub> and CO is obtained from <a href="https://portal.nccs.nasa.gov/datashare/gmao/geos-cf/v1/das/">GEOS-CF Website</a>. After accessing the website I chose the day on which I wanted to obtain the data. The daat are in the form of .h5 files. By default GEOS-CF data is provided at latitude and longitude ranges of -90 to 90 and -180 to 180 respectively.</p></li>
 <li><p>MODIS data for analyzing wildfires is obtained form <a href="https://firms.modaps.eosdis.nasa.gov/download/">MODIS Website</a> and from the <a href="https://worldview.earthdata.nasa.gov/">World View Website</a>. After accessing the website, I have specified the latitude and longitude boundaries, type of satellite, and file formats. I chose the file format to csv.I further used this csv file for analysis in R.</p></li>
 </ul>
-<p>###Analysisng CO and NO<sub>2</sub> data (.mat) files in R The .mat files read in R</p>
-<p>Here’s my first code chunk.</p>
+<div id="analysisng-co-and-no2-data-.mat-files-in-r" class="section level4">
+<h4>Analysisng CO and NO<sub>2</sub> data (.mat) files in R</h4>
+<p>The .mat files read in R were further filtered based on quality index. Once this is done, the data is converted to ordinary datetime format from matlab datetime format using the “lubridate” package and ymd() function. This makes the data into a readable format.</p>
+</div>
+<div id="analysisng-modis-fire-data" class="section level4">
+<h4>Analysisng MODIS fire data</h4>
+<p>The MODIS fire data are in the form of csv files, once these files are read into R, they are in the form of data frames, the number of times a brightness value occurs in a day is taken as a fire count for that day. Number of fire counts on each day are obtained. Based on these fire counts I have filtered the study dates and would be further focusing on them.</p>
+</div>
+<div id="analysing-geos-cf-model-data-for-no2-and-co" class="section level4">
+<h4>Analysing GEOS-CF model data for NO<sub>2</sub> and CO</h4>
+<p>GEOS-CF model data are in the form of .h5 files, the data in these files is in the form of a meshgrid/ matrix. Longitude and Latitude values are distributed in the form of a grid, and each point in the grid (longitude,latitude) pair has a concentration value. GEOS-CF model data on specific dates is chosen based on the MODIS data, the days on which MODIS fire counts were found to be significant were taken into consideration.</p>
+</div>
+<div id="data-representation" class="section level4">
+<h4>Data Representation</h4>
+<p>Data for TROPOMI CO and NO~2 are represented in the from of maps with longitudes varying on x-axis and latitudes varying on y-axis. GEOS-CF model data is also represented in the same way.</p>
+<p>Data from Here’s my first code chunk.</p>
 <pre class="r"><code>1+2</code></pre>
 <pre><code>## [1] 3</code></pre>
 <p>Load any required packages in a code chunk (you may need to install some packages):</p>
@@ -419,6 +433,7 @@ div.tocify {
 library(leaflet)
 library(kableExtra)
 knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling</code></pre>
+</div>
 <div id="download-and-clean-all-required-data" class="section level2">
 <h2>Download and clean all required data</h2>
 <pre class="r"><code>n=20

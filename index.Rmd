@@ -8,8 +8,8 @@ Wildfires in California occur regularly, these have significantly contributed in
 
 #### NASA-TROPOMI 
 The TROPOspheric Monitoring Instrument (TROPOMI) is a satellite instrument which is on board the Copernicus Sentinel-5 Precursor satellite. The Sentinel-5 Precursor (S5P) is launched by the European Space
-Agency (ESA). The tropospheric monitoring instrumentcovers the wavelength of ultraviolet-visible (270 nm to 495 nm), near infrared region (675 nm to 775 nm) and shortwave infrared (2305 nm - 2385 nm).This instrument provides measurements on concentrations of various pollutants and components of atmosphere like ozone, NO 2 , SO 2 ,
-CH 4 , CO, formaldehyde, aerosols and clouds.
+Agency (ESA). The tropospheric monitoring instrument covers the wavelength of ultraviolet-visible (270 nm to 495 nm), near infrared region (675 nm to 775 nm) and shortwave infrared (2305 nm - 2385 nm).This instrument provides measurements on concentrations of various pollutants and components of atmosphere like ozone,  NO~2~ ,  SO~2~,
+CH~4~ , CO, formaldehyde, aerosols and clouds.
 
 #### GEOS-CF
 The GEOS-Chem is a global 3-D model which is used for monitoring atmospheric chemistry, it is driven by assimilated meteorological observations from the Goddard Earth Observing System (GEOS).This model takes into account about 220 reactive species and 720 reactions. GEOS-CF works by taking into account atmospheric dynamics such as wind speed and chemistry of pollutants (such as their chemical reactions, dispersion, reactivity) in predicting their concentrations. 
