@@ -1,6 +1,6 @@
 ---
 title:  "Statistical Comparision of NASA-TROPOMI - Satellite and GEOS-CF - Model Data"
-author: Shruti Jagini 
+author: Shruti Jagini. 
 ---
 
 # Introduction
