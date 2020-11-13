@@ -1,6 +1,7 @@
 ---
-title:  "Statistical Comparision of NASA-TROPOMI - Satellite and GEOS-CF - Model Data"
-author: Shruti Jagini. 
+title: "Statistical Comparision of NASA-TROPOMI - Satellite and GEOS-CF - Model Data"
+author: "Shruti Jagini."
+output: github_document
 ---
 
 # Introduction
@@ -27,15 +28,15 @@ So, since satellite captures real time data and model predicts data based on fac
 
 * MODIS data for analyzing wildfires is obtained form [MODIS Website](https://firms.modaps.eosdis.nasa.gov/download/) and from the [World View Website](https://worldview.earthdata.nasa.gov/). After accessing the website, I have specified the latitude and longitude boundaries, type of satellite, and file formats. I chose the file format to csv.I further used this csv file for analysis in R. 
 
-#### Analysisng TROPOMI CO and NO~2~ data 
+#### Analyzisng TROPOMI CO and NO~2~ data 
 
 The .mat files read in R were further filtered based on quality index. Once this is done, the data is converted to ordinary datetime format from matlab datetime format using the "lubridate" package and ymd() function. This makes the data into a readable format. 
 
-#### Analysisng MODIS fire data 
+#### Analyzisng MODIS fire data 
 
 The MODIS fire data are in the form of csv files, once these files are read into R, they are in the form of data frames, the number of times a brightness value occurs in a day is taken as a fire count for that day. Number of fire counts on each day are obtained. Based on these fire counts I have filtered the study dates and would be further focusing on them. 
 
-#### Analysing GEOS-CF model data for NO~2~ and CO 
+#### Analyzing GEOS-CF model data for NO~2~ and CO 
 
 GEOS-CF model data are in the form of .h5 files, the data in these files is in the form of a meshgrid/ matrix. Longitude and Latitude values  are distributed in the form of a grid, and each point in the grid (longitude,latitude) pair has a concentration value. 
 GEOS-CF model data on specific dates is chosen based on the MODIS data, the days on which MODIS fire counts were found to be significant were taken into consideration. 
@@ -169,15 +170,15 @@ plot_data <- data.frame("y_lat" = c(Lat_lon_grid[["Y"]]), "x_lon" = c(Lat_lon_gr
 # INTERPOLATION: 
 Since, GEOS-CF is a model and predicts the concentrations of species at each and every longitude and latitude. Whereas the TROPOMI satellite does not capture the data at every location. Hence, in order to establish a proper analysis between model and satellite data, interpolation is done. 
 
-###### Sample 
-```{r , results='asis'}
+
+```{r include = FALSE}
 library(akima)
 data(akima760)
-
 # interpolate at the diagonal of the grid [0,8]x[0,10]
 akima.bil <- bilinear(akima760$x,akima760$y,akima760$z,
                       seq(100,800,length=100), seq(0,10,length=100))
 ```
+
 
 
 #### Interpolating GEOS-CF Data at TROPOMI locations 
@@ -230,6 +231,6 @@ ggplot(plot_data_interp,aes(x_lon_interp, y = y_lat_interp, color = z_Con_interp
 
 As of now, data handing and data visualization is carried out for NO~2~ data sets. Further, this part would be extended to CO as well. After this, statistical analysis like bias calculation, error analysis and regression analysis would be conducted in order to observe the correlation between satellite and model data. 
 
-# References
+
 
 

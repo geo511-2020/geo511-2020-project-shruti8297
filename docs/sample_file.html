@@ -400,16 +400,16 @@ div.tocify {
 <li><p>The GEOS-CF model data for both NO<sub>2</sub> and CO is obtained from <a href="https://portal.nccs.nasa.gov/datashare/gmao/geos-cf/v1/das/">GEOS-CF Website</a>. After accessing the website I chose the day on which I wanted to obtain the data. The daat are in the form of .h5 files. By default GEOS-CF data is provided at latitude and longitude ranges of -90 to 90 and -180 to 180 respectively.</p></li>
 <li><p>MODIS data for analyzing wildfires is obtained form <a href="https://firms.modaps.eosdis.nasa.gov/download/">MODIS Website</a> and from the <a href="https://worldview.earthdata.nasa.gov/">World View Website</a>. After accessing the website, I have specified the latitude and longitude boundaries, type of satellite, and file formats. I chose the file format to csv.I further used this csv file for analysis in R.</p></li>
 </ul>
-<div id="analysisng-tropomi-co-and-no2-data" class="section level4">
-<h4>Analysisng TROPOMI CO and NO<sub>2</sub> data</h4>
+<div id="analyzisng-tropomi-co-and-no2-data" class="section level4">
+<h4>Analyzisng TROPOMI CO and NO<sub>2</sub> data</h4>
 <p>The .mat files read in R were further filtered based on quality index. Once this is done, the data is converted to ordinary datetime format from matlab datetime format using the “lubridate” package and ymd() function. This makes the data into a readable format.</p>
 </div>
-<div id="analysisng-modis-fire-data" class="section level4">
-<h4>Analysisng MODIS fire data</h4>
+<div id="analyzisng-modis-fire-data" class="section level4">
+<h4>Analyzisng MODIS fire data</h4>
 <p>The MODIS fire data are in the form of csv files, once these files are read into R, they are in the form of data frames, the number of times a brightness value occurs in a day is taken as a fire count for that day. Number of fire counts on each day are obtained. Based on these fire counts I have filtered the study dates and would be further focusing on them.</p>
 </div>
-<div id="analysing-geos-cf-model-data-for-no2-and-co" class="section level4">
-<h4>Analysing GEOS-CF model data for NO<sub>2</sub> and CO</h4>
+<div id="analyzing-geos-cf-model-data-for-no2-and-co" class="section level4">
+<h4>Analyzing GEOS-CF model data for NO<sub>2</sub> and CO</h4>
 <p>GEOS-CF model data are in the form of .h5 files, the data in these files is in the form of a meshgrid/ matrix. Longitude and Latitude values are distributed in the form of a grid, and each point in the grid (longitude,latitude) pair has a concentration value. GEOS-CF model data on specific dates is chosen based on the MODIS data, the days on which MODIS fire counts were found to be significant were taken into consideration.</p>
 </div>
 <div id="data-handling" class="section level4">
@@ -514,24 +514,6 @@ plot_data &lt;- data.frame(&quot;y_lat&quot; = c(Lat_lon_grid[[&quot;Y&quot;]]),
 <div id="interpolation" class="section level1">
 <h1>INTERPOLATION:</h1>
 <p>Since, GEOS-CF is a model and predicts the concentrations of species at each and every longitude and latitude. Whereas the TROPOMI satellite does not capture the data at every location. Hence, in order to establish a proper analysis between model and satellite data, interpolation is done.</p>
-<div id="sample" class="section level6">
-<h6>Sample</h6>
-<pre class="r"><code>library(akima)</code></pre>
-<pre><code>## Warning: package &#39;akima&#39; was built under R version 4.0.3</code></pre>
-<pre><code>## 
-## Attaching package: &#39;akima&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:interp&#39;:
-## 
-##     franke.data, franke.fn, interp, interpp</code></pre>
-<pre><code>## The following object is masked from &#39;package:Bilinear&#39;:
-## 
-##     bilinear</code></pre>
-<pre class="r"><code>data(akima760)
-
-# interpolate at the diagonal of the grid [0,8]x[0,10]
-akima.bil &lt;- bilinear(akima760$x,akima760$y,akima760$z,
-                      seq(100,800,length=100), seq(0,10,length=100))</code></pre>
-</div>
 <div id="interpolating-geos-cf-data-at-tropomi-locations" class="section level4">
 <h4>Interpolating GEOS-CF Data at TROPOMI locations</h4>
 <pre class="r"><code>y1 &lt;- Latitude 
@@ -586,10 +568,6 @@ Map of completely random data
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
 <p>As of now, data handing and data visualization is carried out for NO<sub>2</sub> data sets. Further, this part would be extended to CO as well. After this, statistical analysis like bias calculation, error analysis and regression analysis would be conducted in order to observe the correlation between satellite and model data.</p>
-</div>
-<div id="references" class="section level1">
-<h1>References</h1>
-<p>All sources are cited in a consistent manner</p>
 </div>
 
 <!-- give the footer some space -->
