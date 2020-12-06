@@ -430,7 +430,7 @@ library(devtools)
 library(Bilinear)
 library(interp) </code></pre>
 <div id="modis" class="section level2">
-<h2>MODIS:</h2>
+<h2>MODIS</h2>
 <div id="reading-fire-data" class="section level4">
 <h4>Reading fire data</h4>
 <pre class="r"><code>modis_data &lt;- read.csv(&#39;C:\\Users\\shrut\\Desktop\\SDS Project\\fire_archive_M6_164945.csv&#39;)</code></pre>
@@ -936,6 +936,66 @@ interp_plot_nov_28 &lt;- ggplot(plot_data_interp_nov_28,aes(x_lon_interp_nov, y 
 </div>
 </div>
 </div>
+<div id="data-visualisation" class="section level1">
+<h1>Data Visualisation</h1>
+<p>Since we have performed interpolation, we could now visualize and see how the TROPOMI and GEOS-CF interpolated TROPOMI varies with respect to fire and non-fire dates.</p>
+<div id="non-fire-dates---august-18th" class="section level4">
+<h4>Non fire dates - August 18th</h4>
+<pre class="r"><code>trop_plot_aug_18</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_aug_18</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-41-2.png" width="672" /></p>
+</div>
+<div id="non-fire-dates---august-24th" class="section level4">
+<h4>Non fire dates - August 24th</h4>
+<pre class="r"><code>trop_plot_aug_24</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_aug_24</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-42-2.png" width="672" /></p>
+</div>
+<div id="non-fire-dates---august-25th" class="section level4">
+<h4>Non fire dates - August 25th</h4>
+<pre class="r"><code>trop_plot_aug_25</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_aug_25</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-43-2.png" width="672" /></p>
+</div>
+<div id="fire-dates---august-8th" class="section level4">
+<h4>Fire dates - August 8th</h4>
+<pre class="r"><code>trop_plot_aug_8</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_aug_8</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-44-2.png" width="672" /></p>
+</div>
+<div id="non-fire-dates---november-22nd" class="section level4">
+<h4>Non fire dates - November 22nd</h4>
+<pre class="r"><code>trop_plot_nov_22</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_nov_22</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-45-2.png" width="672" /></p>
+</div>
+<div id="non-fire-dates---november-23rd" class="section level4">
+<h4>Non fire dates - November 23rd</h4>
+<pre class="r"><code>trop_plot_nov_23</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_nov_23</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-46-2.png" width="672" /></p>
+</div>
+<div id="non-fire-dates---november-28th" class="section level4">
+<h4>Non fire dates - November 28th</h4>
+<pre class="r"><code>trop_plot_nov_28</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_nov_28</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-47-2.png" width="672" /></p>
+</div>
+<div id="fire-dates---november-11th" class="section level4">
+<h4>Fire dates - November 11th</h4>
+<pre class="r"><code>trop_plot_nov_11</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_nov_11</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-48-2.png" width="672" /></p>
+</div>
+</div>
 <div id="statistical-analysis" class="section level1">
 <h1>Statistical Analysis</h1>
 <p>Now since the data is ready, the next step would be going with statistical analysis. Firstly, going with regression analysis. This would involve creating a regression model between TROPOMI and GEOS-CF interpolated TROPOMI data and thereby comparing their correlation coefficients. The regression analysis is as shown below:</p>
@@ -966,28 +1026,28 @@ yval_aug_18 &lt;- lm_data_frame_aug_18[&#39;z_Con_interp_nov&#39;]
 x2_aug_18 &lt;- data.frame(yval_aug_18,xval_aug_18)
 plot(x2_aug_18,ylim=c(0,5e+15), main = &quot;August 18&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
 abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_18), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-51-1.png" width="672" /></p>
 <pre class="r"><code>xval_aug_24 &lt;- lm_data_frame_aug_24[&#39;NO2_Concentration&#39;]
 yval_aug_24 &lt;- lm_data_frame_aug_24[&#39;z_Con_interp_nov&#39;]
 x2_aug_24 &lt;- data.frame(yval_aug_24,xval_aug_24)
 plot(x2_aug_24,ylim=c(0,5e+15), main = &quot;August 24&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
 abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_24), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-43-2.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-51-2.png" width="672" /></p>
 <pre class="r"><code>xval_aug_25 &lt;- lm_data_frame_aug_25[&#39;NO2_Concentration&#39;]
 yval_aug_25 &lt;- lm_data_frame_aug_25[&#39;z_Con_interp_nov&#39;]
 x2_aug_25 &lt;- data.frame(yval_aug_25,xval_aug_25)
 plot(x2_aug_25,ylim=c(0,5e+15), main = &quot;August 25&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
 abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_25), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-43-3.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-51-3.png" width="672" /></p>
 </div>
 <div id="fire-dates-1" class="section level4">
 <h4>Fire dates</h4>
 <pre class="r"><code>xval &lt;- lm_data_frame_aug_8[&#39;NO2_Concentration&#39;]
 yval &lt;- lm_data_frame_aug_8[&#39;z_Con_interp&#39;]
 x2 &lt;- data.frame(yval,xval)
-plot(x2,ylim=c(0,1.0e+16))
+plot(x2,ylim=c(0,1.0e+16), main = &quot;August 8&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
 abline(lm(NO2_Concentration ~ z_Con_interp, data = lm_data_frame_aug_8), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-52-1.png" width="672" /></p>
 </div>
 </div>
 <div id="november-6" class="section level3">
@@ -1015,25 +1075,25 @@ yval_nov_22 &lt;- lm_data_frame_nov_22[&#39;z_Con_interp_nov&#39;]
 x2_nov_22 &lt;- data.frame(yval_nov_22,xval_nov_22)
 plot(x2_nov_22,ylim=c(0,0.5e+16), main = &quot;November 22&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
 abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_22), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
 <pre class="r"><code>xval_nov_23 &lt;- lm_data_frame_nov_23[&#39;NO2_Concentration_nov&#39;]
 yval_nov_23 &lt;- lm_data_frame_nov_23[&#39;z_Con_interp_nov&#39;]
 x2_nov_23 &lt;- data.frame(yval_nov_23,xval_nov_23)
 plot(x2_nov_23,ylim=c(0,1e+16), main = &quot;November 23&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
 abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_23), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-47-2.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-55-2.png" width="672" /></p>
 <pre class="r"><code>xval_nov_28 &lt;- lm_data_frame_nov_28[&#39;NO2_Concentration_nov&#39;]
 yval_nov_28 &lt;- lm_data_frame_nov_28[&#39;z_Con_interp_nov&#39;]
 x2_nov_28 &lt;- data.frame(yval_nov_28,xval_nov_28)
 plot(x2_nov_28,ylim=c(0,1e+16), main = &quot;November 28&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
 abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_28), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-47-3.png" width="672" /> #### Fire dates</p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-55-3.png" width="672" /> #### Fire dates</p>
 <pre class="r"><code>xval &lt;- lm_data_frame_nov_11[&#39;NO2_Concentration_nov&#39;]
 yval &lt;- lm_data_frame_nov_11[&#39;z_Con_interp_nov&#39;]
 x2_nov_11 &lt;- data.frame(yval,xval)
-plot(x2_nov_11,ylim=c(0,10.0e+16))
+plot(x2_nov_11,ylim=c(0,10.0e+16), main = &quot;November 11&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
 abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_11), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-56-1.png" width="672" /></p>
 <p>Also, error analysis would be conducted for the above data sets. TROPOMI values are predicted based on the model and bias is calculated between predicted values and original values, plots are constructed between the error (e) and predicted values, these plots help us in understanding the trend in errors.</p>
 </div>
 </div>
@@ -1100,17 +1160,17 @@ bias_nov_11 &lt;- mean(bias_1_nov_11)  </code></pre>
 res_data_aug_18 &lt;- data.frame(predicted_values_tropomi_aug_18, diff_aug_18)
 plot(res_data_aug_18,ylim=c(-3e+15 ,3e+15), main = &quot;August 18&quot;,ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
 abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-53-1.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-61-1.png" width="672" /></p>
 <pre class="r"><code>diff_aug_24 &lt;- predicted_values_tropomi_aug_24 - lm_data_frame_aug_24[&#39;NO2_Concentration&#39;]
 res_data_aug_24 &lt;- data.frame(predicted_values_tropomi_aug_24, diff_aug_24)
 plot(res_data_aug_24,ylim=c(-3e+15 ,3e+15),main = &quot;August 24&quot;, ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
 abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-53-2.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-61-2.png" width="672" /></p>
 <pre class="r"><code>diff_aug_25 &lt;- predicted_values_tropomi_aug_25 - lm_data_frame_aug_25[&#39;NO2_Concentration&#39;]
 res_data_aug_25 &lt;- data.frame(predicted_values_tropomi_aug_25, diff_aug_25)
 plot(res_data_aug_25,ylim=c(-1.5e+15 ,2e+15), main = &quot;August 25&quot;,ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
 abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-53-3.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-61-3.png" width="672" /></p>
 </div>
 <div id="fire-dates-5" class="section level4">
 <h4>Fire dates</h4>
@@ -1118,7 +1178,7 @@ abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
 res_data_aug_8 &lt;- data.frame(predicted_values_tropomi_aug_8, bias_1_aug_8)
 plot(res_data_aug_8,ylim=c(-3e+15,3e+15))
 abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
 </div>
 </div>
 <div id="november-8" class="section level3">
@@ -1129,17 +1189,17 @@ abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
 res_data_nov_22 &lt;- data.frame(predicted_values_tropomi_nov_22, diff_nov_22)
 plot(res_data_nov_22,main = &quot;November 22&quot;,ylim=c(-5e+15 ,3e+15), ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
 abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
 <pre class="r"><code>diff_nov_23 &lt;- predicted_values_tropomi_nov_23 - lm_data_frame_nov_23[&#39;NO2_Concentration_nov&#39;]
 res_data_nov_23 &lt;- data.frame(predicted_values_tropomi_nov_23, diff_nov_23)
 plot(res_data_nov_23,main = &quot;November 23&quot;,ylim=c(-5e+15 ,3e+15), ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
 abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-55-2.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-63-2.png" width="672" /></p>
 <pre class="r"><code>diff_nov_28 &lt;- predicted_values_tropomi_nov_28 - lm_data_frame_nov_28[&#39;NO2_Concentration_nov&#39;]
 res_data_nov_28 &lt;- data.frame(predicted_values_tropomi_nov_28, diff_nov_28)
 plot(res_data_nov_28,main = &quot;November 28&quot;,ylim=c(-1.5e+16 ,5e+15), ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
 abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-55-3.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-63-3.png" width="672" /></p>
 </div>
 <div id="fire-dates-6" class="section level4">
 <h4>Fire dates</h4>
@@ -1147,9 +1207,68 @@ abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
 res_data_nov_11 &lt;- data.frame(predicted_values_tropomi_nov_11, bias_1_nov_11)
 plot(res_data_nov_11,ylim=c(-5e+16,4e+15))
 abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-56-1.png" width="672" /></p>
+<p><img src="Proj_files/figure-html/unnamed-chunk-64-1.png" width="672" /></p>
 </div>
 </div>
+</div>
+</div>
+<div id="results-and-discussions" class="section level1">
+<h1>Results and Discussions</h1>
+<div id="regression-analysis-1" class="section level2">
+<h2>Regression Analysis</h2>
+</div>
+<div id="bias-and-error-analysis" class="section level2">
+<h2>Bias and Error Analysis</h2>
+<p>Let us now have a look at the bias values between TROPOMI and GEOS-CF interpolated TROPOMI for fire and non-fire dates.</p>
+<pre class="r"><code>bias_aug_8  </code></pre>
+<pre><code>## [1] 1.487236</code></pre>
+<pre class="r"><code>mean(fire_date_plot_aug_8$NO2_Concentration)</code></pre>
+<pre><code>## [1] 1.231758e+15</code></pre>
+<pre class="r"><code>mean(predicted_values_tropomi_aug_8)</code></pre>
+<pre><code>## [1] 1.231758e+15</code></pre>
+<pre class="r"><code>bias_nov_11</code></pre>
+<pre><code>## [1] -6.629031</code></pre>
+<pre class="r"><code>mean(fire_date_plot_nov_11$NO2_Concentration_nov)</code></pre>
+<pre><code>## [1] 2.79481e+15</code></pre>
+<pre class="r"><code>mean(predicted_values_tropomi_nov_11)</code></pre>
+<pre><code>## [1] 2.79481e+15</code></pre>
+<p>The above values show bias values for non-fire dates</p>
+<pre class="r"><code>bias_1_aug_18  </code></pre>
+<pre><code>## [1] 6.829596</code></pre>
+<pre class="r"><code>mean(fire_date_plot_aug_18$NO2_Concentration)</code></pre>
+<pre><code>## [1] 1.312616e+15</code></pre>
+<pre class="r"><code>mean(predicted_values_tropomi_aug_18)</code></pre>
+<pre><code>## [1] 1.312616e+15</code></pre>
+<pre class="r"><code>bias_1_aug_24</code></pre>
+<pre><code>## [1] 11.17082</code></pre>
+<pre class="r"><code>mean(fire_date_plot_aug_24$NO2_Concentration)</code></pre>
+<pre><code>## [1] 1.14608e+15</code></pre>
+<pre class="r"><code>mean(predicted_values_tropomi_aug_24)</code></pre>
+<pre><code>## [1] 1.14608e+15</code></pre>
+<pre class="r"><code>bias_1_aug_25</code></pre>
+<pre><code>## [1] -0.1529434</code></pre>
+<pre class="r"><code>mean(fire_date_plot_aug_25$NO2_Concentration)</code></pre>
+<pre><code>## [1] 1.063685e+15</code></pre>
+<pre class="r"><code>mean(predicted_values_tropomi_aug_25)</code></pre>
+<pre><code>## [1] 1.063685e+15</code></pre>
+<pre class="r"><code>bias_1_nov_22</code></pre>
+<pre><code>## [1] -0.8199442</code></pre>
+<pre class="r"><code>mean(fire_date_plot_nov_22$NO2_Concentration_nov)</code></pre>
+<pre><code>## [1] 1.258436e+15</code></pre>
+<pre class="r"><code>mean(predicted_values_tropomi_nov_22)</code></pre>
+<pre><code>## [1] 1.258436e+15</code></pre>
+<pre class="r"><code>bias_1_nov_23</code></pre>
+<pre><code>## [1] -17.83629</code></pre>
+<pre class="r"><code>mean(fire_date_plot_nov_23$NO2_Concentration_nov)</code></pre>
+<pre><code>## [1] 1.268654e+15</code></pre>
+<pre class="r"><code>mean(predicted_values_tropomi_nov_23)</code></pre>
+<pre><code>## [1] 1.268654e+15</code></pre>
+<pre class="r"><code>bias_1_nov_28</code></pre>
+<pre><code>## [1] 8.066294</code></pre>
+<pre class="r"><code>mean(fire_date_plot_nov_28$NO2_Concentration_nov)</code></pre>
+<pre><code>## [1] 1.962174e+15</code></pre>
+<pre class="r"><code>mean(predicted_values_tropomi_nov_28)</code></pre>
+<pre><code>## [1] 1.962174e+15</code></pre>
 </div>
 </div>
 

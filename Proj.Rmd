@@ -67,7 +67,7 @@ library(Bilinear)
 library(interp) 
 ```
 
-## MODIS: 
+## MODIS 
 
 #### Reading fire data 
 ```{r , results='asis'}
@@ -606,6 +606,64 @@ interp_plot_nov_11 <- ggplot(plot_data_interp_nov_11,aes(x_lon_interp_nov, y = y
 
 ```
 
+# Data Visualisation 
+Since we have performed interpolation, we could now visualize and see how the TROPOMI and GEOS-CF interpolated TROPOMI varies with respect to fire and non-fire dates. 
+
+#### Non fire dates - August 18th 
+```{r, message=F, warning=F}
+trop_plot_aug_18
+interp_plot_aug_18
+
+```
+
+#### Non fire dates - August 24th 
+```{r, message=F, warning=F}
+trop_plot_aug_24
+interp_plot_aug_24
+
+```
+
+#### Non fire dates - August 25th 
+```{r, message=F, warning=F}
+trop_plot_aug_25
+interp_plot_aug_25
+
+```
+
+#### Fire dates - August 8th 
+```{r, message=F, warning=F}
+trop_plot_aug_8
+interp_plot_aug_8
+
+```
+
+#### Non fire dates - November 22nd 
+```{r, message=F, warning=F}
+trop_plot_nov_22
+interp_plot_nov_22
+
+```
+
+#### Non fire dates - November 23rd 
+```{r, message=F, warning=F}
+trop_plot_nov_23
+interp_plot_nov_23
+
+```
+
+#### Non fire dates - November 28th 
+```{r, message=F, warning=F}
+trop_plot_nov_28
+interp_plot_nov_28
+
+```
+
+#### Fire dates - November 11th 
+```{r, message=F, warning=F}
+trop_plot_nov_11
+interp_plot_nov_11
+```
+
 # Statistical Analysis 
 Now since the data is ready, the next step would be going with statistical analysis. Firstly, going with regression analysis. This would involve creating a regression model between TROPOMI and GEOS-CF interpolated TROPOMI data and thereby comparing their correlation coefficients. 
 The regression analysis is as shown below: 
@@ -656,7 +714,7 @@ abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_25), co
 xval <- lm_data_frame_aug_8['NO2_Concentration']
 yval <- lm_data_frame_aug_8['z_Con_interp']
 x2 <- data.frame(yval,xval)
-plot(x2,ylim=c(0,1.0e+16))
+plot(x2,ylim=c(0,1.0e+16), main = "August 8",xlab = 'GEOS- Interpolated at Tropomi', ylab ='Tropomi')
 abline(lm(NO2_Concentration ~ z_Con_interp, data = lm_data_frame_aug_8), col = "red")
 ```
 
@@ -708,7 +766,7 @@ abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_28)
 xval <- lm_data_frame_nov_11['NO2_Concentration_nov']
 yval <- lm_data_frame_nov_11['z_Con_interp_nov']
 x2_nov_11 <- data.frame(yval,xval)
-plot(x2_nov_11,ylim=c(0,10.0e+16))
+plot(x2_nov_11,ylim=c(0,10.0e+16), main = "November 11",xlab = 'GEOS- Interpolated at Tropomi', ylab ='Tropomi')
 abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_11), col = "red")
 ```
 
@@ -819,5 +877,46 @@ res_data_nov_11 <- data.frame(predicted_values_tropomi_nov_11, bias_1_nov_11)
 plot(res_data_nov_11,ylim=c(-5e+16,4e+15))
 abline(h=c(0), col=c("blue"))
 ```
+
+# Results and Discussions 
+## Regression Analysis 
+
+## Bias and Error Analysis 
+
+Let us now have a look at the bias values between TROPOMI and GEOS-CF interpolated TROPOMI for fire and non-fire dates. 
+
+```{r, message=F, warning=F}
+bias_aug_8  
+mean(fire_date_plot_aug_8$NO2_Concentration)
+mean(predicted_values_tropomi_aug_8)
+
+bias_nov_11
+mean(fire_date_plot_nov_11$NO2_Concentration_nov)
+mean(predicted_values_tropomi_nov_11)
+```
+
+The above values show bias values for non-fire dates 
+```{r, message=F, warning=F}
+bias_1_aug_18  
+mean(fire_date_plot_aug_18$NO2_Concentration)
+mean(predicted_values_tropomi_aug_18)
+bias_1_aug_24
+mean(fire_date_plot_aug_24$NO2_Concentration)
+mean(predicted_values_tropomi_aug_24)
+bias_1_aug_25
+mean(fire_date_plot_aug_25$NO2_Concentration)
+mean(predicted_values_tropomi_aug_25)
+bias_1_nov_22
+mean(fire_date_plot_nov_22$NO2_Concentration_nov)
+mean(predicted_values_tropomi_nov_22)
+bias_1_nov_23
+mean(fire_date_plot_nov_23$NO2_Concentration_nov)
+mean(predicted_values_tropomi_nov_23)
+bias_1_nov_28
+mean(fire_date_plot_nov_28$NO2_Concentration_nov)
+mean(predicted_values_tropomi_nov_28)
+```
+
+
 
 
