@@ -883,39 +883,39 @@ abline(h=c(0), col=c("blue"))
 
 ## Bias and Error Analysis 
 
-Let us now have a look at the bias values between TROPOMI and GEOS-CF interpolated TROPOMI for fire and non-fire dates. 
-
-```{r, message=F, warning=F}
-bias_aug_8  
-mean(fire_date_plot_aug_8$NO2_Concentration)
-mean(predicted_values_tropomi_aug_8)
-
-bias_nov_11
-mean(fire_date_plot_nov_11$NO2_Concentration_nov)
-mean(predicted_values_tropomi_nov_11)
+```{r chunk-name, echo=FALSE}
+y_data <- c(1.79, 0.6, 34.9, 32.9, 35.5, 49.9, 33.4, 46.8)
+x_data <- c("08-08", "11-11", "08-18", "08-24", "08-25", "11-22", "11-23", "11-28")
+trop_conc <- c(2.231e+15, 2.790e+15, 1.321e+15, 1.147e+15, 1.060e+15, 1.251e+15, 1.268e+15, 1.167e+15)
+geos_conc <- c(1.86e+13, 8.8e+12, 9.11e+12, 9.13e+12, 8.14e+12, 9.25e+12, 8.89e+12, 8.65e+12)
+df<- data.frame(x_data, y_data, trop_conc, geos_conc)
+r2_plot <- ggplot(df, aes(x=x_data, y= y_data)) + 
+  geom_point()
+geos_conc_plot <- ggplot(df, aes(x=x_data, y= geos_conc)) + 
+  geom_point()
+trop_conc_plot <- ggplot(df, aes(x=x_data, y= trop_conc)) + 
+  geom_point()
 ```
 
-The above values show bias values for non-fire dates 
+
 ```{r, message=F, warning=F}
-bias_1_aug_18  
-mean(fire_date_plot_aug_18$NO2_Concentration)
-mean(predicted_values_tropomi_aug_18)
-bias_1_aug_24
-mean(fire_date_plot_aug_24$NO2_Concentration)
-mean(predicted_values_tropomi_aug_24)
-bias_1_aug_25
-mean(fire_date_plot_aug_25$NO2_Concentration)
-mean(predicted_values_tropomi_aug_25)
-bias_1_nov_22
-mean(fire_date_plot_nov_22$NO2_Concentration_nov)
-mean(predicted_values_tropomi_nov_22)
-bias_1_nov_23
-mean(fire_date_plot_nov_23$NO2_Concentration_nov)
-mean(predicted_values_tropomi_nov_23)
-bias_1_nov_28
-mean(fire_date_plot_nov_28$NO2_Concentration_nov)
-mean(predicted_values_tropomi_nov_28)
+r2s_plot 
+geos_conc_plot
+trop_conc_plot
 ```
+
+The above shown tropomi and geos interpolated tropomi plots show that concentrations of NO~2~ were high on days which had significant amount of fire counts as compared to the days which didn't have any fire counts. This leads to a conclusion that concentration of NO~2~ is directly correlated with fire counts. 
+
+r2 here represents the correlation coefficient between TROPOMI data and predicted TROPOMI data, i.e., which is based on the regression models. When we observe the r2 plot we can see that the correlation coefficient is high for the days which doesn't have any fire counts as compared to the days which have significant amount of fire counts, this shows that linear regression model fits good for days which have a low mean NO~2~ concentration than for days that have high mean NO~2~ concentration. We can also say that linear regression fits best for the days which don't have any fire counts as compared to the days which have fire counts. 
+
+
+
+
+
+
+
+
+
 
 
 

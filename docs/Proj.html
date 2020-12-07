@@ -1219,56 +1219,12 @@ abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
 </div>
 <div id="bias-and-error-analysis" class="section level2">
 <h2>Bias and Error Analysis</h2>
-<p>Let us now have a look at the bias values between TROPOMI and GEOS-CF interpolated TROPOMI for fire and non-fire dates.</p>
-<pre class="r"><code>bias_aug_8  </code></pre>
-<pre><code>## [1] 1.487236</code></pre>
-<pre class="r"><code>mean(fire_date_plot_aug_8$NO2_Concentration)</code></pre>
-<pre><code>## [1] 1.231758e+15</code></pre>
-<pre class="r"><code>mean(predicted_values_tropomi_aug_8)</code></pre>
-<pre><code>## [1] 1.231758e+15</code></pre>
-<pre class="r"><code>bias_nov_11</code></pre>
-<pre><code>## [1] -6.629031</code></pre>
-<pre class="r"><code>mean(fire_date_plot_nov_11$NO2_Concentration_nov)</code></pre>
-<pre><code>## [1] 2.79481e+15</code></pre>
-<pre class="r"><code>mean(predicted_values_tropomi_nov_11)</code></pre>
-<pre><code>## [1] 2.79481e+15</code></pre>
-<p>The above values show bias values for non-fire dates</p>
-<pre class="r"><code>bias_1_aug_18  </code></pre>
-<pre><code>## [1] 6.829596</code></pre>
-<pre class="r"><code>mean(fire_date_plot_aug_18$NO2_Concentration)</code></pre>
-<pre><code>## [1] 1.312616e+15</code></pre>
-<pre class="r"><code>mean(predicted_values_tropomi_aug_18)</code></pre>
-<pre><code>## [1] 1.312616e+15</code></pre>
-<pre class="r"><code>bias_1_aug_24</code></pre>
-<pre><code>## [1] 11.17082</code></pre>
-<pre class="r"><code>mean(fire_date_plot_aug_24$NO2_Concentration)</code></pre>
-<pre><code>## [1] 1.14608e+15</code></pre>
-<pre class="r"><code>mean(predicted_values_tropomi_aug_24)</code></pre>
-<pre><code>## [1] 1.14608e+15</code></pre>
-<pre class="r"><code>bias_1_aug_25</code></pre>
-<pre><code>## [1] -0.1529434</code></pre>
-<pre class="r"><code>mean(fire_date_plot_aug_25$NO2_Concentration)</code></pre>
-<pre><code>## [1] 1.063685e+15</code></pre>
-<pre class="r"><code>mean(predicted_values_tropomi_aug_25)</code></pre>
-<pre><code>## [1] 1.063685e+15</code></pre>
-<pre class="r"><code>bias_1_nov_22</code></pre>
-<pre><code>## [1] -0.8199442</code></pre>
-<pre class="r"><code>mean(fire_date_plot_nov_22$NO2_Concentration_nov)</code></pre>
-<pre><code>## [1] 1.258436e+15</code></pre>
-<pre class="r"><code>mean(predicted_values_tropomi_nov_22)</code></pre>
-<pre><code>## [1] 1.258436e+15</code></pre>
-<pre class="r"><code>bias_1_nov_23</code></pre>
-<pre><code>## [1] -17.83629</code></pre>
-<pre class="r"><code>mean(fire_date_plot_nov_23$NO2_Concentration_nov)</code></pre>
-<pre><code>## [1] 1.268654e+15</code></pre>
-<pre class="r"><code>mean(predicted_values_tropomi_nov_23)</code></pre>
-<pre><code>## [1] 1.268654e+15</code></pre>
-<pre class="r"><code>bias_1_nov_28</code></pre>
-<pre><code>## [1] 8.066294</code></pre>
-<pre class="r"><code>mean(fire_date_plot_nov_28$NO2_Concentration_nov)</code></pre>
-<pre><code>## [1] 1.962174e+15</code></pre>
-<pre class="r"><code>mean(predicted_values_tropomi_nov_28)</code></pre>
-<pre><code>## [1] 1.962174e+15</code></pre>
+<pre class="r"><code>bias_plot </code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-65-1.png" width="672" /></p>
+<pre class="r"><code>geos_conc_plot</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-65-2.png" width="672" /></p>
+<pre class="r"><code>trop_conc_plot</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-65-3.png" width="672" /></p>
 </div>
 </div>
 
