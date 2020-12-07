@@ -1,6 +1,7 @@
 ---
-title:  "Statistical Comparision of NASA-TROPOMI - Satellite and GEOS-CF - Model Data"
-author: Shruti Jagini. 
+title: "Statistical Comparision of NASA-TROPOMI - Satellite and GEOS-CF - Model Data"
+author: "Shruti Jagini."
+output: github_document
 ---
 
 # Introduction
@@ -16,6 +17,7 @@ The GEOS-Chem is a global 3-D model which is used for monitoring atmospheric che
 
 So, since satellite captures real time data and model predicts data based on factors, the goal of this project is to analyze how accurate the model data is to satellite data. 
 
+
 # Materials and methods
 
 * The NASA-TROPOMI satellite data for analyzing NO~2~ concentration is obtained from  [GES-DISC Website](https://disc.gsfc.nasa.gov/). After accessing the website, I have specified the latitude, longitude boundaries, parameters that I wish to sample (quality index, surface pressure.. etc) and the time period in which we want to obtain the data. Once this is done,files were downloaded in .txt format. These files have been further converted to .mat files using a python script. The .mat files generated from the python script were further used in R for analysis. 
@@ -26,30 +28,37 @@ So, since satellite captures real time data and model predicts data based on fac
 
 * MODIS data for analyzing wildfires is obtained form [MODIS Website](https://firms.modaps.eosdis.nasa.gov/download/) and from the [World View Website](https://worldview.earthdata.nasa.gov/). After accessing the website, I have specified the latitude and longitude boundaries, type of satellite, and file formats. I chose the file format to csv.I further used this csv file for analysis in R. 
 
-#### Analysisng CO and NO~2~ data (.mat) files in R 
+#### Analyzisng TROPOMI CO and NO~2~ data 
 
 The .mat files read in R were further filtered based on quality index. Once this is done, the data is converted to ordinary datetime format from matlab datetime format using the "lubridate" package and ymd() function. This makes the data into a readable format. 
 
-#### Analysisng MODIS fire data 
+#### Analyzisng MODIS fire data 
 
 The MODIS fire data are in the form of csv files, once these files are read into R, they are in the form of data frames, the number of times a brightness value occurs in a day is taken as a fire count for that day. Number of fire counts on each day are obtained. Based on these fire counts I have filtered the study dates and would be further focusing on them. 
 
-#### Analysing GEOS-CF model data for NO~2~  and CO 
+#### Analyzing GEOS-CF model data for NO~2~ and CO 
 
 GEOS-CF model data are in the form of .h5 files, the data in these files is in the form of a meshgrid/ matrix. Longitude and Latitude values  are distributed in the form of a grid, and each point in the grid (longitude,latitude) pair has a concentration value. 
 GEOS-CF model data on specific dates is chosen based on the MODIS data, the days on which MODIS fire counts were found to be significant were taken into consideration. 
 
-#### Data Representation 
+#### Data Handling 
 
 Data for TROPOMI CO and NO~2 are represented in the from of maps with longitudes varying on x-axis and latitudes varying on y-axis. GEOS-CF model data is also represented in the same way. 
 
 The following packages were used in the project:
 
+
 ```{r, message=F, warning=F}
 library(pracma)
-
+ # cache the results for quick compiling
 ```
 
+```{r, message=F, warning=F}
+library(R.matlab)
+library(tidyverse)
+library(leaflet)
+library(kableExtra)  # cache the results for quick compiling
+```
 
 ```{r, message=F, warning=F}
 library(dplyr)
@@ -59,28 +68,19 @@ library(ncdf4)
 library(ggplot2)
 library(devtools)
 library(Bilinear)
-library(interp)  
+library(interp)  # cache the results for quick compiling
 ```
 
+#MODIS: 
 
-```{r, message=F, warning=F}
-library(R.matlab)
-library(tidyverse)
-library(leaflet)
-library(kableExtra)
-knitr::opts_chunk$set(cache=TRUE) 
-```
-
-# DATA HANDLING 
-#### Reading modis fire data 
+#### Reading fire data 
 ```{r , results='asis'}
 
 modis_data <- read.csv('C:\\Users\\shrut\\Desktop\\SDS Project\\fire_archive_M6_164945.csv')
 
-#if you could provide the csv in your repo or clear directions to it in your text that would be helpful. I went to the links you mentioned but wasnt sure what time range / countries I should be pulling information for. This could also be done by reading the csv directly from the web Marko Lazin
 ```
 
-####  MODIS DATA: Setting up Latitude, Longitude boundaries and sorting data 
+#### Setting up Latitude, Longitude boundaries and sorting data 
 ```{r , results='asis'}
 
 modis_data_lat_filter <- modis_data[modis_data$latitude > 30.4 & modis_data$latitude < 37.3 ,]
@@ -90,70 +90,147 @@ count_table <- as.data.frame(table(dates))
 counts_table_order <- count_table[order(-count_table$Freq),]
 ```
 
-From the above code we can have a clear view about the dates where fire was significant, the table counts_table shows the frequency of fire counts on each day. 
+From the above code we can have a clear view about the dates where fire was significant, the table counts_table shows the frequency of fire counts on each day.
 
-#### Reading GEOS-CF NO~2~ DATA
+# TROPOMI:
+
+#### Reading NO~2~ DATA
+
+```{r , results='asis'}
+no2_data <- readMat('C:\\Users\\shrut\\Desktop\\SDS Project\\data files\\CONUS_2018_08.mat', package='rmatio')
+```
+
+#### Defining parameters NO~2~ Data 
+
+```{r , results='asis'}
+lat <- no2_data[["output.subset"]][5]
+no2_lat <- lat[[1]]
+lon <- no2_data[["output.subset"]][6]
+no2_lon <- lon[[1]]
+conc <- no2_data[["output.subset"]][8]
+no2_conc <- conc[[1]]
+values_day <- no2_data[["output.subset"]][12]
+no2_dates <- values_day[[1]]
+qa_values <- no2_data[["output.subset"]][7]
+no2_qa <- qa_values[[1]]
+```
+
+#### Setting up Latitude, Longitude boundaries and changing date-time format
+```{r , results='asis'}
+no2_data<- data.frame("Latitude" = c(no2_lat), "Longitude" = c(no2_lon), "NO2_Concentration" = c(no2_conc),"QA_Value" = c(no2_qa), "Dates" = c(no2_dates))
+
+#filtering data according to latitude and longitude boundaries 
+filter_1 <- filter(no2_data, Latitude > 30.4 & Latitude < 37.3 & Longitude > -124 & Longitude < -111.8)
+
+#filtering data based on quality index values 
+filter_2 <- filter(filter_1, "QA_value" > 0.5)
+
+#converting matlab datetime to ordinary datetime 
+Matlab2Rdate <- function(val) as.Date(val - 1, origin = '0000-01-01')
+change_dates <- Matlab2Rdate(filter_2[["Dates"]])
+modified_date <- ymd(change_dates)
+
+#Assigning converted dates to the dataframe 
+filter_2$converted_dates<- c(modified_date)
+
+fire_date_plot <- filter(filter_2, modified_date == '2018-08-08')
+```
+
+The dates on which fire was found to be significant in the year 2018 were chosen in the study. Hence, the date '2018-08-08' is chosen and used as a filter in the above code. 
+
+# GEOS-CF: 
+
+#### Reading NO~2~ Data
 
 ```{r , results='asis'}
 setwd('C:\\Users\\shrut\\Downloads')
 geos_no2_data <- nc_open('GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20180808_0530z.nc4')
 ```
 
+#### Defining parameters for NO~2~ Data 
 
-
-The dates on which fire was found to be significant in the year 2018 were chosen in the study. Hence, the date '2018-08-08' is chosen and used as a filter in the above code. 
-
-## Download and clean all required data
-```{r}
-n=20
-data=data.frame(x=runif(n,-180,180),
-                y=runif(n,-60,60),
-                size = runif(n, 5, 20),
-                category = factor(
-                  sample(letters[1:5], n, replace = TRUE)
-                  ),
-                value = rnorm(n))
+```{r , results='asis'}
+lon_geos <- ncvar_get(geos_no2_data, "lon")
+lat_geos <- ncvar_get(geos_no2_data, "lat")
+CONC_geos <- ncvar_get(geos_no2_data, "TOTCOL_NO2")
 ```
 
-```{r, results='asis'}
-data %>% 
-  slice(1:10) %>% #show only 1:n rows
-  kable(digits=2,align="c")%>% #make table and round to two digits
-  kable_styling(bootstrap_options = 
-                  c("striped", "hover", "condensed", "responsive")) #apply other formatting
+####  Setting up Latitude, Longitude boundaries and creating a Longitude, Latitude meshgrid 
+```{r , results='asis'}
+#creating plots 
+Latitude <- c(lat_geos)
+Longitude <- c(lon_geos)
+Lat_filter <- Latitude[Latitude > 30.4 & Latitude < 37.3]
+Lon_filter <- Longitude[Longitude > -124 & Longitude < -111.8]
+Lat_lon_grid <- meshgrid(Longitude, Latitude)
+plot_data <- data.frame("y_lat" = c(Lat_lon_grid[["Y"]]), "x_lon" = c(Lat_lon_grid[["X"]]), "z_Con" = c(CONC_geos))
+
 ```
 
-Add any additional processing steps here.
+# INTERPOLATION: 
+Since, GEOS-CF is a model and predicts the concentrations of species at each and every longitude and latitude. Whereas the TROPOMI satellite does not capture the data at every location. Hence, in order to establish a proper analysis between model and satellite data, interpolation is done. 
+
+
+```{r include = FALSE}
+library(akima)
+data(akima760)
+# interpolate at the diagonal of the grid [0,8]x[0,10]
+akima.bil <- bilinear(akima760$x,akima760$y,akima760$z,
+                      seq(100,800,length=100), seq(0,10,length=100))
+```
+
+
+
+#### Interpolating GEOS-CF Data at TROPOMI locations 
+```{r , results='asis'}
+y1 <- Latitude 
+x1 <- Longitude
+z1 <- CONC_geos
+x0 <- filter_2['Longitude']
+y0 <- filter_2['Latitude']
+x2 <- as.numeric(unlist(x0))
+y2<- as.numeric(unlist(y0))
+latlon.bil <- bilinear(x1,y1,z1,x2,y2)
+plot_data_interp <- data.frame("y_lat_interp" = c(latlon.bil[["y"]]), "x_lon_interp" = c(latlon.bil[["x"]]), "z_Con_interp" = c(latlon.bil[["z"]]*0.001))
+
+
+```
+
+Once the interpolated data is obtained from the above code, statistical analysis like bias calculation, error analysis and regression analysis are carried out. 
 
 # Results
 
 [~200 words]
 
 Tables and figures (maps and other graphics) are carefully planned to convey the results of your analysis. Intense exploration and evidence of many trials and failures. The author looked at the data in many different ways before coming to the final presentation of the data.
+ 
+# Data Visualisation: 
 
-Show tables, plots, etc. and describe them.
+The plots shown below represent TROPOMI data and GEOS-CF interpolated TROPOMI data for NO2~2~. 
 
+#### Plotting TROPOMI data on 2018-08-08. 
 ```{r, fig.width=6, fig.height=3, fig.cap="Map of completely random data"}
-m <- leaflet(data) %>% 
-  addTiles() %>% 
-  addCircleMarkers(~x, ~y, radius = ~size,color = ~as.factor(category)) %>% 
-  addPopups(~x[2], ~y[2], "Random popup")
-m  # a map with the default OSM tile layer
+ggplot(fire_date_plot, aes(x=Longitude,y=Latitude, color= NO2_Concentration)) + 
+  geom_point()+
+  geom_tile(fire_date_plot, mapping = aes(x=Longitude, y = Latitude)) +
+  coord_fixed(ratio = 1)+
+  ggtitle(" TROPOMI data on 2018-08-08")
 ```
 
 
-```{r}
-data %>% 
-  ggplot(aes(x=x,y=y,col=category))+
-  geom_point()
+#### Plotting GEOS-CF interpolated TROPOMI data on 2018-08-08. 
+```{r, fig.width=6, fig.height=3, fig.cap="Map of completely random data"}
+ggplot(plot_data_interp,aes(x_lon_interp, y = y_lat_interp, color = z_Con_interp))+
+  geom_point()+
+  geom_tile(plot_data_interp,mapping = aes(x_lon_interp, y = y_lat_interp, fill= z_Con_interp)) +
+  coord_fixed(ratio = 1)+
+  ggtitle("GEOS-CF Interppolated TROPOMI on 2018-08-08")
 ```
 
 # Conclusions
 
-[~200 words]
+As of now, data handing and data visualization is carried out for NO~2~ data sets. Further, this part would be extended to CO as well. After this, statistical analysis like bias calculation, error analysis and regression analysis would be conducted in order to observe the correlation between satellite and model data. 
 
-Clear summary adequately describing the results and putting them in context. Discussion of further questions and ways to continue investigation.
 
-# References
 
-All sources are cited in a consistent manner
+
