@@ -3,7 +3,7 @@ title:  "Statistical Comparision of NASA-TROPOMI - Satellite and GEOS-CF - Model
 author: Shruti Jagini. 
 ---
 
-# Introduction
+# Introduction 
 Wildfires in California occur regularly, these have significantly contributed in shaping the nature over the past century. Southern California is the highest fire prone regions of the world, its predominant forests have evolved to thrive on the phenomenon of wildfires. Over the past decades the fires have caused significant damage and loss of both property, human and animal life. As a result of these wildfires, a number of pollutants such as, oxides of nitrogen, oxides of sulfur, methane, carbon monoxide are released into the atmosphere. This project deals with statistical comparison between the satellite data (NASA-TROPOMI), and a geographical model data (GEOS-CF) with respect to NO2 and CO concentrations emitted from California wildfires.
 
 #### NASA-TROPOMI 
@@ -14,7 +14,7 @@ CH~4~ , CO, formaldehyde, aerosols and clouds.
 #### GEOS-CF
 The GEOS-Chem is a global 3-D model which is used for monitoring atmospheric chemistry, it is driven by assimilated meteorological observations from the Goddard Earth Observing System (GEOS).This model takes into account about 220 reactive species and 720 reactions. GEOS-CF works by taking into account atmospheric dynamics such as wind speed and chemistry of pollutants (such as their chemical reactions, dispersion, reactivity) in predicting their concentrations. 
 
-So, since satellite captures real time data and model predicts data based on factors, the goal of this project is to analyze how accurate the model data is to satellite data. 
+ So, since satellite captures real time data and model predicts data based on factors, the goal of this project is to analyze how accurate the model data is to satellite data. 
 
 # Materials and methods
 
@@ -89,7 +89,7 @@ count_table <- as.data.frame(table(dates))
 counts_table_order <- count_table[order(-count_table$Freq),]
 ```
 
-From the above code we can have a clear view about the dates where fire was significant, the table counts_table shows the frequency of fire counts on each day. 
+ From the above code we can have a clear view about the dates where fire was significant, the table counts_table shows the frequency of fire counts on each day. 
 
 #### Reading GEOS-CF NO~2~ DATA
 
@@ -137,10 +137,10 @@ m <- leaflet(data) %>%
   addTiles() %>% 
   addCircleMarkers(~x, ~y, radius = ~size,color = ~as.factor(category)) %>% 
   addPopups(~x[2], ~y[2], "Random popup")
-m  # a map with the default OSM tile layer
+m  # a map with the default OSM tile layer 
 ```
 
-
+ 
 ```{r}
 data %>% 
   ggplot(aes(x=x,y=y,col=category))+
