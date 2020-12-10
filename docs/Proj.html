@@ -1145,8 +1145,6 @@ bias_nov_11 &lt;- mean(bias_1_nov_11)  </code></pre>
 <p><img src="Proj_files/figure-html/unnamed-chunk-65-3.png" width="672" /></p>
 <pre class="r"><code>bias_plot </code></pre>
 <p><img src="Proj_files/figure-html/unnamed-chunk-65-4.png" width="672" /></p>
-<pre class="r"><code>reg_plot</code></pre>
-<pre><code>## NULL</code></pre>
 <p>The above shown tropomi and geos interpolated tropomi plots show that concentrations of NO<sub>2</sub> were high on days which had significant amount of fire counts as compared to the days which didn’t have any fire counts. This leads to a conclusion that concentration of NO<sub>2</sub> is directly correlated with fire counts.</p>
 <p>r2 here represents the correlation coefficient between TROPOMI data and predicted TROPOMI data, i.e., which is based on the regression models. When we observe the r2 plot we can see that the correlation coefficient is high for the days which doesn’t have any fire counts as compared to the days which have significant amount of fire counts, this shows that linear regression model fits good for days which have a low mean NO<sub>2</sub> concentration than for days that have high mean NO<sub>2</sub> concentration. We can also say that linear regression fits best for the days which don’t have any fire counts as compared to the days which have fire counts.</p>
 <p>From the bias plot we can also say that TROPOMI and GEOS-Interpolated TROPOMI NO<sub>2</sub> data correlated to a grater extent for days which didn’t have fire counts as compared with the days that had fire counts.</p>

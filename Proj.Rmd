@@ -906,7 +906,6 @@ r2_plot
 geos_conc_plot
 trop_conc_plot
 bias_plot 
-reg_plot
 ```
 
 The above shown tropomi and geos interpolated tropomi plots show that concentrations of NO~2~ were high on days which had significant amount of fire counts as compared to the days which didn't have any fire counts. This leads to a conclusion that concentration of NO~2~ is directly correlated with fire counts. 
