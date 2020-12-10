@@ -414,13 +414,10 @@ div.tocify {
 </div>
 <div id="data-handling" class="section level1">
 <h1>Data Handling</h1>
-<p>Data for TROPOMI NO~2 is represented in the from of maps with longitudes varying on x-axis and latitudes varying on y-axis. GEOS-CF model data is also represented in the same way.</p>
 <p>The following packages were used in the project:</p>
 <pre class="r"><code>library(pracma)</code></pre>
 <pre class="r"><code>library(R.matlab)
-library(tidyverse)
-library(leaflet)
-library(kableExtra)  </code></pre>
+library(tidyverse)</code></pre>
 <pre class="r"><code>library(dplyr)
 library(R.matlab)
 library(lubridate)
@@ -490,6 +487,7 @@ filter_2 &lt;- filter(filter_1, &quot;QA_value&quot; &gt; 0.5)
 Matlab2Rdate &lt;- function(val) as.Date(val - 1, origin = &#39;0000-01-01&#39;)
 change_dates &lt;- Matlab2Rdate(filter_2[[&quot;Dates&quot;]])
 modified_date &lt;- ymd(change_dates)</code></pre>
+<p>The above steps are similarly implemented to November data as well, as the data is read and converted into readable form, the next step is sorting the data based on fire and non-fire dates.</p>
 </div>
 <div id="november-1" class="section level4">
 <h4>November</h4>
@@ -515,7 +513,6 @@ filter_2_nov &lt;- filter(filter_1_nov, &quot;QA_value_nov&quot; &gt; 0.5)
 Matlab2Rdate_nov &lt;- function(val) as.Date(val - 1, origin = &#39;0000-01-01&#39;)
 change_dates_nov &lt;- Matlab2Rdate_nov(filter_2_nov[[&quot;Dates_nov&quot;]])
 modified_date_nov &lt;- ymd(change_dates_nov)</code></pre>
-<p>Now since the data is read and converted into readable form, the next step is sorting the data based on fire and non-fire dates.</p>
 </div>
 <div id="sorting-data-based-on-fire-dates" class="section level4">
 <h4>Sorting data based on fire dates</h4>
@@ -559,7 +556,7 @@ Lat_filter &lt;- Latitude[Latitude &gt; 30.4 &amp; Latitude &lt; 37.3]
 Lon_filter &lt;- Longitude[Longitude &gt; -124 &amp; Longitude &lt; -111.8]
 Lat_lon_grid &lt;- meshgrid(Longitude, Latitude)
 plot_data_aug_8 &lt;- data.frame(&quot;y_lat&quot; = c(Lat_lon_grid[[&quot;Y&quot;]]), &quot;x_lon&quot; = c(Lat_lon_grid[[&quot;X&quot;]]), &quot;z_Con&quot; = c(CONC_geos))</code></pre>
-<p>Since TROPOMI data is from the NASA-TROPOMI satellite, the data is discontinuous since satellite is not effective in capturing data at all locations. And as GEOS-CF is a model, it is continuous and has data values at all locations. As both the data sets are differing in terms of locations, it wouldn’t be appropriate to compare them. THerefore, it would be appropriate when the GEOS-CF data are interpolated at TROPOMI locations. The code shown below does the following.</p>
+<p>Since TROPOMI data is obtained from the NASA-TROPOMI satellite, since satellite is not effective in capturing data at all locations. And as GEOS-CF is a model, it is continuous and has data values at all locations. As both the data sets are differing in terms of locations, it wouldn’t be appropriate to compare them. Therefore, it would be appropriate when the GEOS-CF data are interpolated at TROPOMI locations. The code shown below does the following.</p>
 <div id="interpolating-geos-cf-data-at-tropomi-locations" class="section level5">
 <h5>Interpolating GEOS-CF data at TROPOMI locations</h5>
 <pre class="r"><code>y1 &lt;- Latitude 
@@ -570,6 +567,7 @@ y0 &lt;- fire_date_plot_aug_8[&#39;Latitude&#39;]
 x2 &lt;- as.numeric(unlist(x0))
 y2&lt;- as.numeric(unlist(y0))
 latlon_aug_8.bil &lt;- bilinear(x1,y1,z1,x2,y2)</code></pre>
+<p>The above steps could be similarly repeated for non-fire dates in the month of August, and fire and non-fire dates in November month as well.</p>
 </div>
 </div>
 </div>
@@ -821,12 +819,12 @@ trop_plot_aug_25 &lt;- ggplot(fire_date_plot_aug_25, aes(x=Longitude,y=Latitude,
 </div>
 <div id="tropomi-plots-for-fire-dates" class="section level4">
 <h4>Tropomi plots for fire dates</h4>
-<pre class="r"><code>trop_plot_aug_8 &lt;- ggplot(plot_data_interp_aug_8,aes(x_lon_interp, y = y_lat_interp, color = z_Con_interp))+
+<pre class="r"><code>trop_plot_aug_8 &lt;- ggplot(fire_date_plot_aug_8,aes(x=Longitude,y=Latitude, color= NO2_Concentration))+
   geom_point()+
   xlab(&quot;Longitude&quot;)+
   ylab(&quot;Latitude&quot;)+
   labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
-  ggtitle(&quot;GEOS-CF Interppolated TROPOMI on 2018-08-08&quot;)</code></pre>
+  ggtitle(&quot;TROPOMI data on 2018-08-08&quot;)</code></pre>
 </div>
 </div>
 <div id="november-4" class="section level3">
@@ -1024,30 +1022,20 @@ linearMod_aug_8 &lt;- lm(NO2_Concentration ~z_Con_interp, data=lm_data_frame_aug
 <pre class="r"><code>xval_aug_18 &lt;- lm_data_frame_aug_18[&#39;NO2_Concentration&#39;]
 yval_aug_18 &lt;- lm_data_frame_aug_18[&#39;z_Con_interp_nov&#39;]
 x2_aug_18 &lt;- data.frame(yval_aug_18,xval_aug_18)
-plot(x2_aug_18,ylim=c(0,5e+15), main = &quot;August 18&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
-abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_18), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-51-1.png" width="672" /></p>
-<pre class="r"><code>xval_aug_24 &lt;- lm_data_frame_aug_24[&#39;NO2_Concentration&#39;]
+
+xval_aug_24 &lt;- lm_data_frame_aug_24[&#39;NO2_Concentration&#39;]
 yval_aug_24 &lt;- lm_data_frame_aug_24[&#39;z_Con_interp_nov&#39;]
 x2_aug_24 &lt;- data.frame(yval_aug_24,xval_aug_24)
-plot(x2_aug_24,ylim=c(0,5e+15), main = &quot;August 24&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
-abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_24), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-51-2.png" width="672" /></p>
-<pre class="r"><code>xval_aug_25 &lt;- lm_data_frame_aug_25[&#39;NO2_Concentration&#39;]
+
+xval_aug_25 &lt;- lm_data_frame_aug_25[&#39;NO2_Concentration&#39;]
 yval_aug_25 &lt;- lm_data_frame_aug_25[&#39;z_Con_interp_nov&#39;]
-x2_aug_25 &lt;- data.frame(yval_aug_25,xval_aug_25)
-plot(x2_aug_25,ylim=c(0,5e+15), main = &quot;August 25&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
-abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_25), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-51-3.png" width="672" /></p>
+x2_aug_25 &lt;- data.frame(yval_aug_25,xval_aug_25)</code></pre>
 </div>
 <div id="fire-dates-1" class="section level4">
 <h4>Fire dates</h4>
 <pre class="r"><code>xval &lt;- lm_data_frame_aug_8[&#39;NO2_Concentration&#39;]
 yval &lt;- lm_data_frame_aug_8[&#39;z_Con_interp&#39;]
-x2 &lt;- data.frame(yval,xval)
-plot(x2,ylim=c(0,1.0e+16), main = &quot;August 8&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
-abline(lm(NO2_Concentration ~ z_Con_interp, data = lm_data_frame_aug_8), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-52-1.png" width="672" /></p>
+x2 &lt;- data.frame(yval,xval)</code></pre>
 </div>
 </div>
 <div id="november-6" class="section level3">
@@ -1073,27 +1061,20 @@ linearMod_nov_11 &lt;- lm(NO2_Concentration_nov ~z_Con_interp_nov, data=lm_data_
 <pre class="r"><code>xval_nov_22 &lt;- lm_data_frame_nov_22[&#39;NO2_Concentration_nov&#39;]
 yval_nov_22 &lt;- lm_data_frame_nov_22[&#39;z_Con_interp_nov&#39;]
 x2_nov_22 &lt;- data.frame(yval_nov_22,xval_nov_22)
-plot(x2_nov_22,ylim=c(0,0.5e+16), main = &quot;November 22&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
-abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_22), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
-<pre class="r"><code>xval_nov_23 &lt;- lm_data_frame_nov_23[&#39;NO2_Concentration_nov&#39;]
+
+xval_nov_23 &lt;- lm_data_frame_nov_23[&#39;NO2_Concentration_nov&#39;]
 yval_nov_23 &lt;- lm_data_frame_nov_23[&#39;z_Con_interp_nov&#39;]
 x2_nov_23 &lt;- data.frame(yval_nov_23,xval_nov_23)
-plot(x2_nov_23,ylim=c(0,1e+16), main = &quot;November 23&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
-abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_23), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-55-2.png" width="672" /></p>
-<pre class="r"><code>xval_nov_28 &lt;- lm_data_frame_nov_28[&#39;NO2_Concentration_nov&#39;]
+
+xval_nov_28 &lt;- lm_data_frame_nov_28[&#39;NO2_Concentration_nov&#39;]
 yval_nov_28 &lt;- lm_data_frame_nov_28[&#39;z_Con_interp_nov&#39;]
-x2_nov_28 &lt;- data.frame(yval_nov_28,xval_nov_28)
-plot(x2_nov_28,ylim=c(0,1e+16), main = &quot;November 28&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
-abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_28), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-55-3.png" width="672" /> #### Fire dates</p>
+x2_nov_28 &lt;- data.frame(yval_nov_28,xval_nov_28)</code></pre>
+</div>
+<div id="fire-dates-3" class="section level4">
+<h4>Fire dates</h4>
 <pre class="r"><code>xval &lt;- lm_data_frame_nov_11[&#39;NO2_Concentration_nov&#39;]
 yval &lt;- lm_data_frame_nov_11[&#39;z_Con_interp_nov&#39;]
-x2_nov_11 &lt;- data.frame(yval,xval)
-plot(x2_nov_11,ylim=c(0,10.0e+16), main = &quot;November 11&quot;,xlab = &#39;GEOS- Interpolated at Tropomi&#39;, ylab =&#39;Tropomi&#39;)
-abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_11), col = &quot;red&quot;)</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-56-1.png" width="672" /></p>
+x2_nov_11 &lt;- data.frame(yval,xval)</code></pre>
 <p>Also, error analysis would be conducted for the above data sets. TROPOMI values are predicted based on the model and bias is calculated between predicted values and original values, plots are constructed between the error (e) and predicted values, these plots help us in understanding the trend in errors.</p>
 </div>
 </div>
@@ -1116,7 +1097,7 @@ new.values_aug_25 &lt;- data.frame(values = c(lm_data_frame_aug_25[&#39;z_Con_in
 predicted_values_tropomi_aug_25 &lt;- predict(linearMod_aug_25, newdata = new.values_aug_25)
 bias_1_aug_25 &lt;- mean(predicted_values_tropomi_aug_25- lm_data_frame_aug_25$NO2_Concentration)</code></pre>
 </div>
-<div id="fire-dates-3" class="section level4">
+<div id="fire-dates-4" class="section level4">
 <h4>Fire dates</h4>
 <pre class="r"><code>#predicting values based on linear model  
 new.values_aug_8 &lt;- data.frame(values = c(lm_data_frame_aug_8[&#39;z_Con_interp&#39;]))
@@ -1141,7 +1122,7 @@ new.values_nov_28 &lt;- data.frame(values = c(lm_data_frame_nov_28[&#39;z_Con_in
 predicted_values_tropomi_nov_28 &lt;- predict(linearMod_nov_28, newdata = new.values_nov_28)
 bias_1_nov_28 &lt;- mean(predicted_values_tropomi_nov_28- lm_data_frame_nov_28$NO2_Concentration_nov)</code></pre>
 </div>
-<div id="fire-dates-4" class="section level4">
+<div id="fire-dates-5" class="section level4">
 <h4>Fire dates</h4>
 <pre class="r"><code>new.values_nov_11 &lt;- data.frame(values = c(lm_data_frame_nov_11[&#39;z_Con_interp_nov&#39;]))
 predicted_values_tropomi_nov_11 &lt;- predict(linearMod_nov_11, newdata = new.values_nov_11)
@@ -1150,72 +1131,12 @@ bias_nov_11 &lt;- mean(bias_1_nov_11)  </code></pre>
 </div>
 </div>
 </div>
-<div id="plots-for-error-analysis" class="section level2">
-<h2>Plots for error analysis</h2>
-<div id="august-7" class="section level3">
-<h3>August</h3>
-<div id="non-fire-dates-6" class="section level4">
-<h4>Non-fire dates</h4>
-<pre class="r"><code>diff_aug_18 &lt;- predicted_values_tropomi_aug_18 - lm_data_frame_aug_18[&#39;NO2_Concentration&#39;]
-res_data_aug_18 &lt;- data.frame(predicted_values_tropomi_aug_18, diff_aug_18)
-plot(res_data_aug_18,ylim=c(-3e+15 ,3e+15), main = &quot;August 18&quot;,ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
-abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-61-1.png" width="672" /></p>
-<pre class="r"><code>diff_aug_24 &lt;- predicted_values_tropomi_aug_24 - lm_data_frame_aug_24[&#39;NO2_Concentration&#39;]
-res_data_aug_24 &lt;- data.frame(predicted_values_tropomi_aug_24, diff_aug_24)
-plot(res_data_aug_24,ylim=c(-3e+15 ,3e+15),main = &quot;August 24&quot;, ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
-abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-61-2.png" width="672" /></p>
-<pre class="r"><code>diff_aug_25 &lt;- predicted_values_tropomi_aug_25 - lm_data_frame_aug_25[&#39;NO2_Concentration&#39;]
-res_data_aug_25 &lt;- data.frame(predicted_values_tropomi_aug_25, diff_aug_25)
-plot(res_data_aug_25,ylim=c(-1.5e+15 ,2e+15), main = &quot;August 25&quot;,ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
-abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-61-3.png" width="672" /></p>
-</div>
-<div id="fire-dates-5" class="section level4">
-<h4>Fire dates</h4>
-<pre class="r"><code>diff_aug_8 &lt;- predicted_values_tropomi_aug_8 - fire_date_plot_aug_8[&#39;NO2_Concentration&#39;]
-res_data_aug_8 &lt;- data.frame(predicted_values_tropomi_aug_8, bias_1_aug_8)
-plot(res_data_aug_8,ylim=c(-3e+15,3e+15))
-abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
-</div>
-</div>
-<div id="november-8" class="section level3">
-<h3>November</h3>
-<div id="non-fire-dates-7" class="section level4">
-<h4>Non-fire dates</h4>
-<pre class="r"><code>diff_nov_22 &lt;- predicted_values_tropomi_nov_22 - lm_data_frame_nov_22[&#39;NO2_Concentration_nov&#39;]
-res_data_nov_22 &lt;- data.frame(predicted_values_tropomi_nov_22, diff_nov_22)
-plot(res_data_nov_22,main = &quot;November 22&quot;,ylim=c(-5e+15 ,3e+15), ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
-abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
-<pre class="r"><code>diff_nov_23 &lt;- predicted_values_tropomi_nov_23 - lm_data_frame_nov_23[&#39;NO2_Concentration_nov&#39;]
-res_data_nov_23 &lt;- data.frame(predicted_values_tropomi_nov_23, diff_nov_23)
-plot(res_data_nov_23,main = &quot;November 23&quot;,ylim=c(-5e+15 ,3e+15), ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
-abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-63-2.png" width="672" /></p>
-<pre class="r"><code>diff_nov_28 &lt;- predicted_values_tropomi_nov_28 - lm_data_frame_nov_28[&#39;NO2_Concentration_nov&#39;]
-res_data_nov_28 &lt;- data.frame(predicted_values_tropomi_nov_28, diff_nov_28)
-plot(res_data_nov_28,main = &quot;November 28&quot;,ylim=c(-1.5e+16 ,5e+15), ylab = &#39;e (Predicted Tropomi - Actual Tropomi)&#39;, xlab =&#39;Predicted Tropomi&#39;)
-abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-63-3.png" width="672" /></p>
-</div>
-<div id="fire-dates-6" class="section level4">
-<h4>Fire dates</h4>
-<pre class="r"><code>diff_nov_11 &lt;- predicted_values_tropomi_nov_11 - fire_date_plot_nov_11[&#39;NO2_Concentration_nov&#39;]
-res_data_nov_11 &lt;- data.frame(predicted_values_tropomi_nov_11, bias_1_nov_11)
-plot(res_data_nov_11,ylim=c(-5e+16,4e+15))
-abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
-<p><img src="Proj_files/figure-html/unnamed-chunk-64-1.png" width="672" /></p>
-</div>
-</div>
-</div>
 </div>
 <div id="results-and-discussions" class="section level1">
 <h1>Results and Discussions</h1>
 <div id="regression-bias-and-error-analysis" class="section level2">
 <h2>Regression, Bias and Error Analysis</h2>
+<p><img src="Proj_files/figure-html/chunk-name-1.png" width="672" /></p>
 <pre class="r"><code>r2_plot </code></pre>
 <p><img src="Proj_files/figure-html/unnamed-chunk-65-1.png" width="672" /></p>
 <pre class="r"><code>geos_conc_plot</code></pre>
@@ -1224,9 +1145,12 @@ abline(h=c(0), col=c(&quot;blue&quot;))</code></pre>
 <p><img src="Proj_files/figure-html/unnamed-chunk-65-3.png" width="672" /></p>
 <pre class="r"><code>bias_plot </code></pre>
 <p><img src="Proj_files/figure-html/unnamed-chunk-65-4.png" width="672" /></p>
+<pre class="r"><code>reg_plot</code></pre>
+<pre><code>## NULL</code></pre>
 <p>The above shown tropomi and geos interpolated tropomi plots show that concentrations of NO<sub>2</sub> were high on days which had significant amount of fire counts as compared to the days which didn’t have any fire counts. This leads to a conclusion that concentration of NO<sub>2</sub> is directly correlated with fire counts.</p>
 <p>r2 here represents the correlation coefficient between TROPOMI data and predicted TROPOMI data, i.e., which is based on the regression models. When we observe the r2 plot we can see that the correlation coefficient is high for the days which doesn’t have any fire counts as compared to the days which have significant amount of fire counts, this shows that linear regression model fits good for days which have a low mean NO<sub>2</sub> concentration than for days that have high mean NO<sub>2</sub> concentration. We can also say that linear regression fits best for the days which don’t have any fire counts as compared to the days which have fire counts.</p>
 <p>From the bias plot we can also say that TROPOMI and GEOS-Interpolated TROPOMI NO<sub>2</sub> data correlated to a grater extent for days which didn’t have fire counts as compared with the days that had fire counts.</p>
+<p>The plots between residuals and predicted values can be analyzed for heterostedaticity, whenever their is inconsistency in predicting the values according to the model, i.e., whenever the model serves to be accurate for lower values and fails for higher values, it would be accounted for a case of heterostedaticity. In this case the model could not longer be considered as accurate.</p>
 <p>The above statements could lead us to a conclusion that satellite and TROPOMI data correlated well for non-fire days as compared to the days which had fire counts.</p>
 </div>
 </div>

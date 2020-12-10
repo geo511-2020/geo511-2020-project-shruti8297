@@ -40,8 +40,6 @@ GEOS-CF model data on specific dates is chosen based on the MODIS data, the days
 
 # Data Handling 
 
-Data for TROPOMI NO~2 is represented in the from of maps with longitudes varying on x-axis and latitudes varying on y-axis. GEOS-CF model data is also represented in the same way. 
-
 The following packages were used in the project:
 
 
@@ -52,8 +50,6 @@ library(pracma)
 ```{r, message=F, warning=F}
 library(R.matlab)
 library(tidyverse)
-library(leaflet)
-library(kableExtra)  
 ```
 
 ```{r, message=F, warning=F}
@@ -68,6 +64,7 @@ library(interp)
 ```
 
 ## MODIS 
+
 
 #### Reading fire data 
 ```{r , results='asis'}
@@ -130,6 +127,8 @@ change_dates <- Matlab2Rdate(filter_2[["Dates"]])
 modified_date <- ymd(change_dates)
 ```
 
+The above steps are similarly implemented to November data as well, as the data is read and converted into readable form, the next step is sorting the data based on fire and non-fire dates. 
+
 #### November 
 #### Defining parameters for TROPOMI NO~2~ Data 
 ```{r, message=F, warning=F}
@@ -154,7 +153,7 @@ Matlab2Rdate_nov <- function(val) as.Date(val - 1, origin = '0000-01-01')
 change_dates_nov <- Matlab2Rdate_nov(filter_2_nov[["Dates_nov"]])
 modified_date_nov <- ymd(change_dates_nov)
 ```
-Now since the data is read and converted into readable form, the next step is sorting the data based on fire and non-fire dates. 
+
 
 #### Sorting data based on fire dates 
 ```{r, message=F, warning=F}
@@ -201,7 +200,7 @@ Lat_lon_grid <- meshgrid(Longitude, Latitude)
 plot_data_aug_8 <- data.frame("y_lat" = c(Lat_lon_grid[["Y"]]), "x_lon" = c(Lat_lon_grid[["X"]]), "z_Con" = c(CONC_geos))
 ```
 
-Since TROPOMI data is from the NASA-TROPOMI satellite, the data is discontinuous since satellite is not effective in capturing data at all locations. And as GEOS-CF is a model, it is continuous and has data values at all locations. As both the data sets are differing in terms of locations, it wouldn't be appropriate to compare them. THerefore, it would be appropriate when the GEOS-CF data are interpolated at TROPOMI locations. The code shown below does the following. 
+Since TROPOMI data is obtained from the NASA-TROPOMI satellite, since satellite is not effective in capturing data at all locations. And as GEOS-CF is a model, it is continuous and has data values at all locations. As both the data sets are differing in terms of locations, it wouldn't be appropriate to compare them. Therefore, it would be appropriate when the GEOS-CF data are interpolated at TROPOMI locations. The code shown below does the following. 
 
 ```{r include = FALSE}
 library(akima)
@@ -222,6 +221,7 @@ x2 <- as.numeric(unlist(x0))
 y2<- as.numeric(unlist(y0))
 latlon_aug_8.bil <- bilinear(x1,y1,z1,x2,y2)
 ```
+The above steps could be similarly repeated for non-fire dates in the month of August, and fire and non-fire dates in November month as well. 
 
 ### November 
 #### Reading NO~2~ Data for fire dates 
@@ -492,12 +492,12 @@ trop_plot_aug_25 <- ggplot(fire_date_plot_aug_25, aes(x=Longitude,y=Latitude, co
 
 #### Tropomi plots for fire dates 
 ```{r, message=F, warning=F}
-trop_plot_aug_8 <- ggplot(plot_data_interp_aug_8,aes(x_lon_interp, y = y_lat_interp, color = z_Con_interp))+
+trop_plot_aug_8 <- ggplot(fire_date_plot_aug_8,aes(x=Longitude,y=Latitude, color= NO2_Concentration))+
   geom_point()+
   xlab("Longitude")+
   ylab("Latitude")+
   labs(color='NO2 Concentration in molecules/m2')+
-  ggtitle("GEOS-CF Interppolated TROPOMI on 2018-08-08")
+  ggtitle("TROPOMI data on 2018-08-08")
 ```
 
 ### November 
@@ -693,20 +693,14 @@ linearMod_aug_8 <- lm(NO2_Concentration ~z_Con_interp, data=lm_data_frame_aug_8)
 xval_aug_18 <- lm_data_frame_aug_18['NO2_Concentration']
 yval_aug_18 <- lm_data_frame_aug_18['z_Con_interp_nov']
 x2_aug_18 <- data.frame(yval_aug_18,xval_aug_18)
-plot(x2_aug_18,ylim=c(0,5e+15), main = "August 18",xlab = 'GEOS- Interpolated at Tropomi', ylab ='Tropomi')
-abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_18), col = "red")
 
 xval_aug_24 <- lm_data_frame_aug_24['NO2_Concentration']
 yval_aug_24 <- lm_data_frame_aug_24['z_Con_interp_nov']
 x2_aug_24 <- data.frame(yval_aug_24,xval_aug_24)
-plot(x2_aug_24,ylim=c(0,5e+15), main = "August 24",xlab = 'GEOS- Interpolated at Tropomi', ylab ='Tropomi')
-abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_24), col = "red")
 
 xval_aug_25 <- lm_data_frame_aug_25['NO2_Concentration']
 yval_aug_25 <- lm_data_frame_aug_25['z_Con_interp_nov']
 x2_aug_25 <- data.frame(yval_aug_25,xval_aug_25)
-plot(x2_aug_25,ylim=c(0,5e+15), main = "August 25",xlab = 'GEOS- Interpolated at Tropomi', ylab ='Tropomi')
-abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_25), col = "red")
 ```
 
 #### Fire dates 
@@ -714,8 +708,6 @@ abline(lm(NO2_Concentration ~ z_Con_interp_nov, data = lm_data_frame_aug_25), co
 xval <- lm_data_frame_aug_8['NO2_Concentration']
 yval <- lm_data_frame_aug_8['z_Con_interp']
 x2 <- data.frame(yval,xval)
-plot(x2,ylim=c(0,1.0e+16), main = "August 8",xlab = 'GEOS- Interpolated at Tropomi', ylab ='Tropomi')
-abline(lm(NO2_Concentration ~ z_Con_interp, data = lm_data_frame_aug_8), col = "red")
 ```
 
 
@@ -746,28 +738,21 @@ linearMod_nov_11 <- lm(NO2_Concentration_nov ~z_Con_interp_nov, data=lm_data_fra
 xval_nov_22 <- lm_data_frame_nov_22['NO2_Concentration_nov']
 yval_nov_22 <- lm_data_frame_nov_22['z_Con_interp_nov']
 x2_nov_22 <- data.frame(yval_nov_22,xval_nov_22)
-plot(x2_nov_22,ylim=c(0,0.5e+16), main = "November 22",xlab = 'GEOS- Interpolated at Tropomi', ylab ='Tropomi')
-abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_22), col = "red")
 
 xval_nov_23 <- lm_data_frame_nov_23['NO2_Concentration_nov']
 yval_nov_23 <- lm_data_frame_nov_23['z_Con_interp_nov']
 x2_nov_23 <- data.frame(yval_nov_23,xval_nov_23)
-plot(x2_nov_23,ylim=c(0,1e+16), main = "November 23",xlab = 'GEOS- Interpolated at Tropomi', ylab ='Tropomi')
-abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_23), col = "red")
 
 xval_nov_28 <- lm_data_frame_nov_28['NO2_Concentration_nov']
 yval_nov_28 <- lm_data_frame_nov_28['z_Con_interp_nov']
 x2_nov_28 <- data.frame(yval_nov_28,xval_nov_28)
-plot(x2_nov_28,ylim=c(0,1e+16), main = "November 28",xlab = 'GEOS- Interpolated at Tropomi', ylab ='Tropomi')
-abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_28), col = "red")
+
 ```
 #### Fire dates 
 ```{r, message=F, warning=F}
 xval <- lm_data_frame_nov_11['NO2_Concentration_nov']
 yval <- lm_data_frame_nov_11['z_Con_interp_nov']
 x2_nov_11 <- data.frame(yval,xval)
-plot(x2_nov_11,ylim=c(0,10.0e+16), main = "November 11",xlab = 'GEOS- Interpolated at Tropomi', ylab ='Tropomi')
-abline(lm(NO2_Concentration_nov ~ z_Con_interp_nov, data = lm_data_frame_nov_11), col = "red")
 ```
 
 Also, error analysis would be conducted for the above data sets. TROPOMI values are predicted based on the model and bias is calculated between predicted values and original values, plots are constructed between the error (e) and predicted values, these plots help us in understanding the trend in errors. 
@@ -823,63 +808,59 @@ bias_1_nov_11 <- predicted_values_tropomi_nov_11- fire_date_plot_nov_11$NO2_Conc
 bias_nov_11 <- mean(bias_1_nov_11)  
 ```
 
-## Plots for error analysis 
+
+```{r, include=FALSE}
+## Plots for error analysis
 ### August 
 #### Non-fire dates 
-```{r, message=F, warning=F} 
 diff_aug_18 <- predicted_values_tropomi_aug_18 - lm_data_frame_aug_18['NO2_Concentration']
 res_data_aug_18 <- data.frame(predicted_values_tropomi_aug_18, diff_aug_18)
-plot(res_data_aug_18,ylim=c(-3e+15 ,3e+15), main = "August 18",ylab = 'e (Predicted Tropomi - Actual Tropomi)', xlab ='Predicted Tropomi')
-abline(h=c(0), col=c("blue"))
+
 
 diff_aug_24 <- predicted_values_tropomi_aug_24 - lm_data_frame_aug_24['NO2_Concentration']
 res_data_aug_24 <- data.frame(predicted_values_tropomi_aug_24, diff_aug_24)
-plot(res_data_aug_24,ylim=c(-3e+15 ,3e+15),main = "August 24", ylab = 'e (Predicted Tropomi - Actual Tropomi)', xlab ='Predicted Tropomi')
-abline(h=c(0), col=c("blue"))
+
 
 diff_aug_25 <- predicted_values_tropomi_aug_25 - lm_data_frame_aug_25['NO2_Concentration']
 res_data_aug_25 <- data.frame(predicted_values_tropomi_aug_25, diff_aug_25)
-plot(res_data_aug_25,ylim=c(-1.5e+15 ,2e+15), main = "August 25",ylab = 'e (Predicted Tropomi - Actual Tropomi)', xlab ='Predicted Tropomi')
-abline(h=c(0), col=c("blue"))
+
 ```
 
+
+```{r, include=FALSE} 
 #### Fire dates 
-```{r, message=F, warning=F} 
 diff_aug_8 <- predicted_values_tropomi_aug_8 - fire_date_plot_aug_8['NO2_Concentration']
 res_data_aug_8 <- data.frame(predicted_values_tropomi_aug_8, bias_1_aug_8)
-plot(res_data_aug_8,ylim=c(-3e+15,3e+15))
-abline(h=c(0), col=c("blue"))
+
 ```
 
+
+```{r, include=FALSE}
 ### November 
 #### Non-fire dates 
-```{r, message=F, warning=F}
 diff_nov_22 <- predicted_values_tropomi_nov_22 - lm_data_frame_nov_22['NO2_Concentration_nov']
 res_data_nov_22 <- data.frame(predicted_values_tropomi_nov_22, diff_nov_22)
-plot(res_data_nov_22,main = "November 22",ylim=c(-5e+15 ,3e+15), ylab = 'e (Predicted Tropomi - Actual Tropomi)', xlab ='Predicted Tropomi')
-abline(h=c(0), col=c("blue"))
+
 
 diff_nov_23 <- predicted_values_tropomi_nov_23 - lm_data_frame_nov_23['NO2_Concentration_nov']
 res_data_nov_23 <- data.frame(predicted_values_tropomi_nov_23, diff_nov_23)
-plot(res_data_nov_23,main = "November 23",ylim=c(-5e+15 ,3e+15), ylab = 'e (Predicted Tropomi - Actual Tropomi)', xlab ='Predicted Tropomi')
-abline(h=c(0), col=c("blue"))
+
 
 diff_nov_28 <- predicted_values_tropomi_nov_28 - lm_data_frame_nov_28['NO2_Concentration_nov']
 res_data_nov_28 <- data.frame(predicted_values_tropomi_nov_28, diff_nov_28)
-plot(res_data_nov_28,main = "November 28",ylim=c(-1.5e+16 ,5e+15), ylab = 'e (Predicted Tropomi - Actual Tropomi)', xlab ='Predicted Tropomi')
-abline(h=c(0), col=c("blue"))
+
 ```
  
-#### Fire dates 
-```{r, message=F, warning=F}
+
+```{r, include=FALSE}
+#### Fire dates
 diff_nov_11 <- predicted_values_tropomi_nov_11 - fire_date_plot_nov_11['NO2_Concentration_nov']
 res_data_nov_11 <- data.frame(predicted_values_tropomi_nov_11, bias_1_nov_11)
-plot(res_data_nov_11,ylim=c(-5e+16,4e+15))
-abline(h=c(0), col=c("blue"))
+
 ```
 
-# Results and Discussions 
 
+# Results and Discussions 
 ## Regression, Bias and Error Analysis 
 
 ```{r chunk-name, echo=FALSE}
@@ -914,6 +895,9 @@ trop_conc_plot <- ggplot(df, aes(x=x_data, y= trop_conc)) +
   ylab("NO~2~ Concentration for TROPOMI data in molecules/m2")+
   ggtitle("TROPOMI for fire and non-fire dates")
 
+reg_plot <- plot(res_data_nov_22,main = "TROPOMI" ,ylim=c(-5e+15 ,3e+15), ylab = 'e (Residuals)', xlab ='Predicted Values')
+abline(h=c(0), col=c("blue"))
+
 ```
 
 
@@ -922,6 +906,7 @@ r2_plot
 geos_conc_plot
 trop_conc_plot
 bias_plot 
+reg_plot
 ```
 
 The above shown tropomi and geos interpolated tropomi plots show that concentrations of NO~2~ were high on days which had significant amount of fire counts as compared to the days which didn't have any fire counts. This leads to a conclusion that concentration of NO~2~ is directly correlated with fire counts. 
@@ -929,6 +914,8 @@ The above shown tropomi and geos interpolated tropomi plots show that concentrat
 r2 here represents the correlation coefficient between TROPOMI data and predicted TROPOMI data, i.e., which is based on the regression models. When we observe the r2 plot we can see that the correlation coefficient is high for the days which doesn't have any fire counts as compared to the days which have significant amount of fire counts, this shows that linear regression model fits good for days which have a low mean NO~2~ concentration than for days that have high mean NO~2~ concentration. We can also say that linear regression fits best for the days which don't have any fire counts as compared to the days which have fire counts. 
 
 From the bias plot we can also say that TROPOMI and GEOS-Interpolated TROPOMI NO~2~ data correlated to a grater extent for days which didn't have fire counts as compared with the days that had fire counts. 
+
+The plots between residuals and predicted values can be analyzed for heterostedaticity, whenever their is inconsistency in predicting the values according to the model, i.e., whenever the model serves to be accurate for lower values and fails for higher values, it would be accounted for a case of heterostedaticity. In this case the model could not longer be considered as accurate. 
 
 The above statements could lead us to a conclusion that satellite and TROPOMI data correlated well for non-fire days as compared to the days which had fire counts. 
 
