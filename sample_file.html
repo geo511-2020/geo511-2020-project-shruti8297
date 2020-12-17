@@ -14,7 +14,7 @@
 
 <title>Statistical Comparision of NASA-TROPOMI - Satellite and GEOS-CF - Model Data</title>
 
-<script src="site_libs/jquery-1.12.4/jquery.min.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/simplex.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -26,16 +26,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<script src="site_libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
-<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
-<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
-<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<script src="site_libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
-<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
-<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="site_libs/leaflet-binding-2.0.3/leaflet.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -410,23 +400,28 @@ div.tocify {
 <li><p>The GEOS-CF model data for both NO<sub>2</sub> and CO is obtained from <a href="https://portal.nccs.nasa.gov/datashare/gmao/geos-cf/v1/das/">GEOS-CF Website</a>. After accessing the website I chose the day on which I wanted to obtain the data. The daat are in the form of .h5 files. By default GEOS-CF data is provided at latitude and longitude ranges of -90 to 90 and -180 to 180 respectively.</p></li>
 <li><p>MODIS data for analyzing wildfires is obtained form <a href="https://firms.modaps.eosdis.nasa.gov/download/">MODIS Website</a> and from the <a href="https://worldview.earthdata.nasa.gov/">World View Website</a>. After accessing the website, I have specified the latitude and longitude boundaries, type of satellite, and file formats. I chose the file format to csv.I further used this csv file for analysis in R.</p></li>
 </ul>
-<div id="analysisng-co-and-no2-data-.mat-files-in-r" class="section level4">
-<h4>Analysisng CO and NO<sub>2</sub> data (.mat) files in R</h4>
+<div id="analyzisng-tropomi-co-and-no2-data" class="section level4">
+<h4>Analyzisng TROPOMI CO and NO<sub>2</sub> data</h4>
 <p>The .mat files read in R were further filtered based on quality index. Once this is done, the data is converted to ordinary datetime format from matlab datetime format using the “lubridate” package and ymd() function. This makes the data into a readable format.</p>
 </div>
-<div id="analysisng-modis-fire-data" class="section level4">
-<h4>Analysisng MODIS fire data</h4>
+<div id="analyzisng-modis-fire-data" class="section level4">
+<h4>Analyzisng MODIS fire data</h4>
 <p>The MODIS fire data are in the form of csv files, once these files are read into R, they are in the form of data frames, the number of times a brightness value occurs in a day is taken as a fire count for that day. Number of fire counts on each day are obtained. Based on these fire counts I have filtered the study dates and would be further focusing on them.</p>
 </div>
-<div id="analysing-geos-cf-model-data-for-no2-and-co" class="section level4">
-<h4>Analysing GEOS-CF model data for NO<sub>2</sub> and CO</h4>
+<div id="analyzing-geos-cf-model-data-for-no2-and-co" class="section level4">
+<h4>Analyzing GEOS-CF model data for NO<sub>2</sub> and CO</h4>
 <p>GEOS-CF model data are in the form of .h5 files, the data in these files is in the form of a meshgrid/ matrix. Longitude and Latitude values are distributed in the form of a grid, and each point in the grid (longitude,latitude) pair has a concentration value. GEOS-CF model data on specific dates is chosen based on the MODIS data, the days on which MODIS fire counts were found to be significant were taken into consideration.</p>
 </div>
-<div id="data-representation" class="section level4">
-<h4>Data Representation</h4>
+<div id="data-handling" class="section level4">
+<h4>Data Handling</h4>
 <p>Data for TROPOMI CO and NO~2 are represented in the from of maps with longitudes varying on x-axis and latitudes varying on y-axis. GEOS-CF model data is also represented in the same way.</p>
 <p>The following packages were used in the project:</p>
-<pre class="r"><code>library(pracma)</code></pre>
+<pre class="r"><code>library(pracma)
+ # cache the results for quick compiling</code></pre>
+<pre class="r"><code>library(R.matlab)
+library(tidyverse)
+library(leaflet)
+library(kableExtra)  # cache the results for quick compiling</code></pre>
 <pre class="r"><code>library(dplyr)
 library(R.matlab)
 library(lubridate)
@@ -434,22 +429,15 @@ library(ncdf4)
 library(ggplot2)
 library(devtools)
 library(Bilinear)
-library(interp)  </code></pre>
-<pre class="r"><code>library(R.matlab)
-library(tidyverse)
-library(leaflet)
-library(kableExtra)
-knitr::opts_chunk$set(cache=TRUE) </code></pre>
+library(interp)  # cache the results for quick compiling</code></pre>
+<p>#MODIS:</p>
 </div>
-</div>
-<div id="data-handling" class="section level1">
-<h1>DATA HANDLING</h1>
-<div id="reading-modis-fire-data" class="section level4">
-<h4>Reading modis fire data</h4>
+<div id="reading-fire-data" class="section level4">
+<h4>Reading fire data</h4>
 <pre class="r"><code>modis_data &lt;- read.csv(&#39;C:\\Users\\shrut\\Desktop\\SDS Project\\fire_archive_M6_164945.csv&#39;)</code></pre>
 </div>
-<div id="modis-data-setting-up-latitude-longitude-boundaries-and-sorting-data" class="section level4">
-<h4>MODIS DATA: Setting up Latitude, Longitude boundaries and sorting data</h4>
+<div id="setting-up-latitude-longitude-boundaries-and-sorting-data" class="section level4">
+<h4>Setting up Latitude, Longitude boundaries and sorting data</h4>
 <pre class="r"><code>modis_data_lat_filter &lt;- modis_data[modis_data$latitude &gt; 30.4 &amp; modis_data$latitude &lt; 37.3 ,]
 modis_data_lon_filter &lt;- modis_data_lat_filter[modis_data_lat_filter$longitude &gt; -124 &amp; modis_data_lat_filter$longitude &lt; -111.8 ,]
 dates &lt;- c(modis_data_lon_filter[&#39;acq_date&#39;])
@@ -457,253 +445,129 @@ count_table &lt;- as.data.frame(table(dates))
 counts_table_order &lt;- count_table[order(-count_table$Freq),]</code></pre>
 <p>From the above code we can have a clear view about the dates where fire was significant, the table counts_table shows the frequency of fire counts on each day.</p>
 </div>
-<div id="reading-geos-cf-no2-data" class="section level4">
-<h4>Reading GEOS-CF NO<sub>2</sub> DATA</h4>
-<pre class="r"><code>setwd(&#39;C:\\Users\\shrut\\Downloads&#39;)
-geos_no2_data &lt;- nc_open(&#39;GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20180808_0530z.nc4&#39;)</code></pre>
+</div>
+<div id="tropomi" class="section level1">
+<h1>TROPOMI:</h1>
+<div id="reading-no2-data" class="section level4">
+<h4>Reading NO<sub>2</sub> DATA</h4>
+<pre class="r"><code>no2_data &lt;- readMat(&#39;C:\\Users\\shrut\\Desktop\\SDS Project\\data files\\CONUS_2018_08.mat&#39;, package=&#39;rmatio&#39;)</code></pre>
+</div>
+<div id="defining-parameters-no2-data" class="section level4">
+<h4>Defining parameters NO<sub>2</sub> Data</h4>
+<pre class="r"><code>lat &lt;- no2_data[[&quot;output.subset&quot;]][5]
+no2_lat &lt;- lat[[1]]
+lon &lt;- no2_data[[&quot;output.subset&quot;]][6]
+no2_lon &lt;- lon[[1]]
+conc &lt;- no2_data[[&quot;output.subset&quot;]][8]
+no2_conc &lt;- conc[[1]]
+values_day &lt;- no2_data[[&quot;output.subset&quot;]][12]
+no2_dates &lt;- values_day[[1]]
+qa_values &lt;- no2_data[[&quot;output.subset&quot;]][7]
+no2_qa &lt;- qa_values[[1]]</code></pre>
+</div>
+<div id="setting-up-latitude-longitude-boundaries-and-changing-date-time-format" class="section level4">
+<h4>Setting up Latitude, Longitude boundaries and changing date-time format</h4>
+<pre class="r"><code>no2_data&lt;- data.frame(&quot;Latitude&quot; = c(no2_lat), &quot;Longitude&quot; = c(no2_lon), &quot;NO2_Concentration&quot; = c(no2_conc),&quot;QA_Value&quot; = c(no2_qa), &quot;Dates&quot; = c(no2_dates))
+
+#filtering data according to latitude and longitude boundaries 
+filter_1 &lt;- filter(no2_data, Latitude &gt; 30.4 &amp; Latitude &lt; 37.3 &amp; Longitude &gt; -124 &amp; Longitude &lt; -111.8)
+
+#filtering data based on quality index values 
+filter_2 &lt;- filter(filter_1, &quot;QA_value&quot; &gt; 0.5)
+
+#converting matlab datetime to ordinary datetime 
+Matlab2Rdate &lt;- function(val) as.Date(val - 1, origin = &#39;0000-01-01&#39;)
+change_dates &lt;- Matlab2Rdate(filter_2[[&quot;Dates&quot;]])
+modified_date &lt;- ymd(change_dates)
+
+#Assigning converted dates to the dataframe 
+filter_2$converted_dates&lt;- c(modified_date)
+
+fire_date_plot &lt;- filter(filter_2, modified_date == &#39;2018-08-08&#39;)</code></pre>
 <p>The dates on which fire was found to be significant in the year 2018 were chosen in the study. Hence, the date ‘2018-08-08’ is chosen and used as a filter in the above code.</p>
 </div>
-<div id="download-and-clean-all-required-data" class="section level2">
-<h2>Download and clean all required data</h2>
-<pre class="r"><code>n=20
-data=data.frame(x=runif(n,-180,180),
-                y=runif(n,-60,60),
-                size = runif(n, 5, 20),
-                category = factor(
-                  sample(letters[1:5], n, replace = TRUE)
-                  ),
-                value = rnorm(n))</code></pre>
-<pre class="r"><code>data %&gt;% 
-  slice(1:10) %&gt;% #show only 1:n rows
-  kable(digits=2,align=&quot;c&quot;)%&gt;% #make table and round to two digits
-  kable_styling(bootstrap_options = 
-                  c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;)) #apply other formatting</code></pre>
-<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:center;">
-x
-</th>
-<th style="text-align:center;">
-y
-</th>
-<th style="text-align:center;">
-size
-</th>
-<th style="text-align:center;">
-category
-</th>
-<th style="text-align:center;">
-value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;">
-69.79
-</td>
-<td style="text-align:center;">
-36.89
-</td>
-<td style="text-align:center;">
-13.16
-</td>
-<td style="text-align:center;">
-b
-</td>
-<td style="text-align:center;">
--0.84
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-72.21
-</td>
-<td style="text-align:center;">
--31.11
-</td>
-<td style="text-align:center;">
-13.27
-</td>
-<td style="text-align:center;">
-a
-</td>
-<td style="text-align:center;">
-1.04
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-146.95
-</td>
-<td style="text-align:center;">
-37.95
-</td>
-<td style="text-align:center;">
-7.31
-</td>
-<td style="text-align:center;">
-b
-</td>
-<td style="text-align:center;">
--0.33
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
--39.86
-</td>
-<td style="text-align:center;">
-14.55
-</td>
-<td style="text-align:center;">
-6.09
-</td>
-<td style="text-align:center;">
-a
-</td>
-<td style="text-align:center;">
--0.66
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-78.52
-</td>
-<td style="text-align:center;">
--35.63
-</td>
-<td style="text-align:center;">
-11.02
-</td>
-<td style="text-align:center;">
-c
-</td>
-<td style="text-align:center;">
--0.88
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
--160.12
-</td>
-<td style="text-align:center;">
--15.96
-</td>
-<td style="text-align:center;">
-8.26
-</td>
-<td style="text-align:center;">
-c
-</td>
-<td style="text-align:center;">
-0.81
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
--39.50
-</td>
-<td style="text-align:center;">
-35.57
-</td>
-<td style="text-align:center;">
-13.83
-</td>
-<td style="text-align:center;">
-e
-</td>
-<td style="text-align:center;">
-0.60
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-26.05
-</td>
-<td style="text-align:center;">
--2.16
-</td>
-<td style="text-align:center;">
-18.85
-</td>
-<td style="text-align:center;">
-c
-</td>
-<td style="text-align:center;">
--0.75
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
--66.78
-</td>
-<td style="text-align:center;">
-8.75
-</td>
-<td style="text-align:center;">
-9.38
-</td>
-<td style="text-align:center;">
-c
-</td>
-<td style="text-align:center;">
--1.61
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-121.38
-</td>
-<td style="text-align:center;">
-29.20
-</td>
-<td style="text-align:center;">
-12.89
-</td>
-<td style="text-align:center;">
-a
-</td>
-<td style="text-align:center;">
--3.87
-</td>
-</tr>
-</tbody>
-</table>
-<p>Add any additional processing steps here.</p>
+</div>
+<div id="geos-cf-1" class="section level1">
+<h1>GEOS-CF:</h1>
+<div id="reading-no2-data-1" class="section level4">
+<h4>Reading NO<sub>2</sub> Data</h4>
+<pre class="r"><code>setwd(&#39;C:\\Users\\shrut\\Downloads&#39;)
+geos_no2_data &lt;- nc_open(&#39;GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20180808_0530z.nc4&#39;)</code></pre>
+</div>
+<div id="defining-parameters-for-no2-data" class="section level4">
+<h4>Defining parameters for NO<sub>2</sub> Data</h4>
+<pre class="r"><code>lon_geos &lt;- ncvar_get(geos_no2_data, &quot;lon&quot;)
+lat_geos &lt;- ncvar_get(geos_no2_data, &quot;lat&quot;)
+CONC_geos &lt;- ncvar_get(geos_no2_data, &quot;TOTCOL_NO2&quot;)</code></pre>
+</div>
+<div id="setting-up-latitude-longitude-boundaries-and-creating-a-longitude-latitude-meshgrid" class="section level4">
+<h4>Setting up Latitude, Longitude boundaries and creating a Longitude, Latitude meshgrid</h4>
+<pre class="r"><code>#creating plots 
+Latitude &lt;- c(lat_geos)
+Longitude &lt;- c(lon_geos)
+Lat_filter &lt;- Latitude[Latitude &gt; 30.4 &amp; Latitude &lt; 37.3]
+Lon_filter &lt;- Longitude[Longitude &gt; -124 &amp; Longitude &lt; -111.8]
+Lat_lon_grid &lt;- meshgrid(Longitude, Latitude)
+plot_data &lt;- data.frame(&quot;y_lat&quot; = c(Lat_lon_grid[[&quot;Y&quot;]]), &quot;x_lon&quot; = c(Lat_lon_grid[[&quot;X&quot;]]), &quot;z_Con&quot; = c(CONC_geos))</code></pre>
+</div>
+</div>
+<div id="interpolation" class="section level1">
+<h1>INTERPOLATION:</h1>
+<p>Since, GEOS-CF is a model and predicts the concentrations of species at each and every longitude and latitude. Whereas the TROPOMI satellite does not capture the data at every location. Hence, in order to establish a proper analysis between model and satellite data, interpolation is done.</p>
+<div id="interpolating-geos-cf-data-at-tropomi-locations" class="section level4">
+<h4>Interpolating GEOS-CF Data at TROPOMI locations</h4>
+<pre class="r"><code>y1 &lt;- Latitude 
+x1 &lt;- Longitude
+z1 &lt;- CONC_geos
+x0 &lt;- filter_2[&#39;Longitude&#39;]
+y0 &lt;- filter_2[&#39;Latitude&#39;]
+x2 &lt;- as.numeric(unlist(x0))
+y2&lt;- as.numeric(unlist(y0))
+latlon.bil &lt;- bilinear(x1,y1,z1,x2,y2)
+plot_data_interp &lt;- data.frame(&quot;y_lat_interp&quot; = c(latlon.bil[[&quot;y&quot;]]), &quot;x_lon_interp&quot; = c(latlon.bil[[&quot;x&quot;]]), &quot;z_Con_interp&quot; = c(latlon.bil[[&quot;z&quot;]]*0.001))</code></pre>
+<p>Once the interpolated data is obtained from the above code, statistical analysis like bias calculation, error analysis and regression analysis are carried out.</p>
 </div>
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>
 <p>[~200 words]</p>
 <p>Tables and figures (maps and other graphics) are carefully planned to convey the results of your analysis. Intense exploration and evidence of many trials and failures. The author looked at the data in many different ways before coming to the final presentation of the data.</p>
-<p>Show tables, plots, etc. and describe them.</p>
-<pre class="r"><code>m &lt;- leaflet(data) %&gt;% 
-  addTiles() %&gt;% 
-  addCircleMarkers(~x, ~y, radius = ~size,color = ~as.factor(category)) %&gt;% 
-  addPopups(~x[2], ~y[2], &quot;Random popup&quot;)
-m  # a map with the default OSM tile layer</code></pre>
+</div>
+<div id="data-visualisation" class="section level1">
+<h1>Data Visualisation:</h1>
+<p>The plots shown below represent TROPOMI data and GEOS-CF interpolated TROPOMI data for NO2<sub>2</sub>.</p>
+<div id="plotting-tropomi-data-on-2018-08-08." class="section level4">
+<h4>Plotting TROPOMI data on 2018-08-08.</h4>
+<pre class="r"><code>ggplot(fire_date_plot, aes(x=Longitude,y=Latitude, color= NO2_Concentration)) + 
+  geom_point()+
+  geom_tile(fire_date_plot, mapping = aes(x=Longitude, y = Latitude)) +
+  coord_fixed(ratio = 1)+
+  ggtitle(&quot; TROPOMI data on 2018-08-08&quot;)</code></pre>
 <div class="figure">
-<div id="htmlwidget-72beb56a40f3819f2d3c" style="width:576px;height:288px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-72beb56a40f3819f2d3c">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircleMarkers","args":[[36.8855767697096,-31.1098444461823,37.9526288062334,14.5481435582042,-35.6261951755732,-15.962910912931,35.5696980748326,-2.15881738811731,8.74537691473961,29.1969023086131,-31.3978990539908,-22.1428159531206,-30.3633006289601,-57.4570314958692,49.4124953448772,19.7684464976192,53.0592738837004,-57.9897683579475,-50.4241373855621,34.1591959353536],[69.7942940331995,72.2094930801541,146.948697343469,-39.8602662608027,78.5179826337844,-160.115867508575,-39.502567704767,26.0501477960497,-66.7829876113683,121.378562701866,-58.0909201595932,-172.770294276997,103.62603418529,74.8730693757534,15.2339878957719,109.245056295767,75.7880286220461,-33.5593397822231,11.3368543703109,73.0469721928239],[13.1572922435589,13.2674083649181,7.30623912531883,6.09439973835833,11.0242762148846,8.25948165613227,13.8250115537085,18.8544875592925,9.38211516477168,12.8916567959823,10.8008111873642,8.25150172808208,10.4552053427324,18.3120968402363,10.9114524943288,12.8822371154092,11.5697971801274,16.3789871765766,7.63292832416482,18.4323112934362],null,null,{"interactive":true,"className":"","stroke":true,"color":["b","a","b","a","c","c","e","c","c","a","d","d","d","a","e","b","a","b","c","a"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["b","a","b","a","c","c","e","c","c","a","d","d","d","a","e","b","a","b","c","a"],"fillOpacity":0.2},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addPopups","args":[-31.1098444461823,72.2094930801541,"Random popup",null,null,{"maxWidth":300,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"className":""}]}],"limits":{"lat":[-57.9897683579475,53.0592738837004],"lng":[-172.770294276997,146.948697343469]}},"evals":[],"jsHooks":[]}</script>
+<img src="sample_file_files/figure-html/unnamed-chunk-14-1.png" alt="Map of completely random data" width="576" />
 <p class="caption">
 Map of completely random data
 </p>
 </div>
-<pre class="r"><code>data %&gt;% 
-  ggplot(aes(x=x,y=y,col=category))+
-  geom_point()</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="plotting-geos-cf-interpolated-tropomi-data-on-2018-08-08." class="section level4">
+<h4>Plotting GEOS-CF interpolated TROPOMI data on 2018-08-08.</h4>
+<pre class="r"><code>ggplot(plot_data_interp,aes(x_lon_interp, y = y_lat_interp, color = z_Con_interp))+
+  geom_point()+
+  geom_tile(plot_data_interp,mapping = aes(x_lon_interp, y = y_lat_interp, fill= z_Con_interp)) +
+  coord_fixed(ratio = 1)+
+  ggtitle(&quot;GEOS-CF Interppolated TROPOMI on 2018-08-08&quot;)</code></pre>
+<div class="figure">
+<img src="sample_file_files/figure-html/unnamed-chunk-15-1.png" alt="Map of completely random data" width="576" />
+<p class="caption">
+Map of completely random data
+</p>
+</div>
+</div>
 </div>
 <div id="conclusions" class="section level1">
 <h1>Conclusions</h1>
-<p>[~200 words]</p>
-<p>Clear summary adequately describing the results and putting them in context. Discussion of further questions and ways to continue investigation.</p>
-</div>
-<div id="references" class="section level1">
-<h1>References</h1>
-<p>All sources are cited in a consistent manner</p>
+<p>As of now, data handing and data visualization is carried out for NO<sub>2</sub> data sets. Further, this part would be extended to CO as well. After this, statistical analysis like bias calculation, error analysis and regression analysis would be conducted in order to observe the correlation between satellite and model data.</p>
 </div>
 
 <!-- give the footer some space -->

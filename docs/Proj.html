@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Shruti Jagini." />
+
+
+<title>Statistical Comparision of NASA-TROPOMI - Satellite and GEOS-CF - Model Data</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/simplex.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 41px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 46px;
+  margin-top: -46px;
+}
+.section h2 {
+  padding-top: 46px;
+  margin-top: -46px;
+}
+.section h3 {
+  padding-top: 46px;
+  margin-top: -46px;
+}
+.section h4 {
+  padding-top: 46px;
+  margin-top: -46px;
+}
+.section h5 {
+  padding-top: 46px;
+  margin-top: -46px;
+}
+.section h6 {
+  padding-top: 46px;
+  margin-top: -46px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Spatial Data Science Final Project</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Statistical Comparision of NASA-TROPOMI - Satellite and GEOS-CF - Model Data</h1>
+<h4 class="author">Shruti Jagini.</h4>
+
+</div>
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Wildfires in California occur regularly, these have significantly contributed in shaping the nature over the past century. Southern California is the highest fire prone regions of the world, its predominant forests have evolved to thrive on the phenomenon of wildfires. Over the past decades the fires have caused significant damage and loss of both property, human and animal life. As a result of these wildfires, a number of pollutants such as, oxides of nitrogen, oxides of sulfur, methane, carbon monoxide are released into the atmosphere. This project deals with statistical comparison between the satellite data (NASA-TROPOMI), and a geographical model data (GEOS-CF) with respect to NO2 and CO concentrations emitted from California wildfires.</p>
+<div id="nasa-tropomi" class="section level4">
+<h4>NASA-TROPOMI</h4>
+<p>The TROPOspheric Monitoring Instrument (TROPOMI) is a satellite instrument which is on board the Copernicus Sentinel-5 Precursor satellite. The Sentinel-5 Precursor (S5P) is launched by the European Space Agency (ESA). The tropospheric monitoring instrument covers the wavelength of ultraviolet-visible (270 nm to 495 nm), near infrared region (675 nm to 775 nm) and shortwave infrared (2305 nm - 2385 nm).This instrument provides measurements on concentrations of various pollutants and components of atmosphere like ozone, NO<sub>2</sub> , SO<sub>2</sub>, CH<sub>4</sub> , CO, formaldehyde, aerosols and clouds.</p>
+</div>
+<div id="geos-cf" class="section level4">
+<h4>GEOS-CF</h4>
+<p>The GEOS-Chem is a global 3-D model which is used for monitoring atmospheric chemistry, it is driven by assimilated meteorological observations from the Goddard Earth Observing System (GEOS).This model takes into account about 220 reactive species and 720 reactions. GEOS-CF works by taking into account atmospheric dynamics such as wind speed and chemistry of pollutants (such as their chemical reactions, dispersion, reactivity) in predicting their concentrations.</p>
+<p>So, since satellite captures real time data and model predicts data based on factors, the goal of this project is to analyze how accurate the model data is to satellite data with respect to the days with and without fire counts.</p>
+</div>
+</div>
+<div id="materials-and-methods" class="section level1">
+<h1>Materials and Methods</h1>
+<ul>
+<li><p>The NASA-TROPOMI satellite data for analyzing NO<sub>2</sub> concentration is obtained from <a href="https://disc.gsfc.nasa.gov/">GES-DISC Website</a>. After accessing the website, I have specified the latitude, longitude boundaries, parameters that I wish to sample (quality index, surface pressure.. etc) and the time period in which we want to obtain the data. Once this is done,files were downloaded in .txt format. These files have been further converted to .mat files using a python script. The .mat files generated from the python script were further used in R for analysis.</p></li>
+<li><p>The GEOS-CF model data for both NO<sub>2</sub> is obtained from <a href="https://portal.nccs.nasa.gov/datashare/gmao/geos-cf/v1/das/">GEOS-CF Website</a>. After accessing the website I chose the day on which I wanted to obtain the data. The daat are in the form of .h5 files. By default GEOS-CF data is provided at latitude and longitude ranges of -90 to 90 and -180 to 180 respectively.</p></li>
+<li><p>MODIS data for analyzing wildfires is obtained form <a href="https://firms.modaps.eosdis.nasa.gov/download/">MODIS Website</a> and from the <a href="https://worldview.earthdata.nasa.gov/">World View Website</a>. After accessing the website, I have specified the latitude and longitude boundaries, type of satellite, and file formats. I chose the file format to csv.I further used this csv file for analysis in R.</p></li>
+</ul>
+<div id="analyzisng-modis-fire-data" class="section level4">
+<h4>Analyzisng MODIS fire data</h4>
+<p>The MODIS fire data are in the form of csv files, once these files are read into R, they are in the form of data frames, the number of times a brightness value occurs in a day is taken as a fire count for that day. Number of fire counts on each day are obtained. Based on these fire counts I have filtered the study dates and would be further focusing on them.</p>
+</div>
+<div id="analyzisng-tropomi-no2-data" class="section level4">
+<h4>Analyzisng TROPOMI NO<sub>2</sub> data</h4>
+<p>The .mat files read in R were further filtered based on quality index. Once this is done, the data is converted to ordinary datetime format from matlab datetime format using the “lubridate” package and ymd() function. This makes the data into a readable format.</p>
+</div>
+<div id="analyzing-geos-cf-model-data-for-no2" class="section level4">
+<h4>Analyzing GEOS-CF model data for NO<sub>2</sub></h4>
+<p>GEOS-CF model data are in the form of .h5 files, the data in these files is in the form of a meshgrid/ matrix. Longitude and Latitude values are distributed in the form of a grid, and each point in the grid (longitude,latitude) pair has a concentration value. GEOS-CF model data on specific dates is chosen based on the MODIS data, the days on which MODIS fire counts were found to be significant were taken into consideration.</p>
+</div>
+</div>
+<div id="data-handling" class="section level1">
+<h1>Data Handling</h1>
+<p>The following packages were used in the project:</p>
+<pre class="r"><code>library(pracma)</code></pre>
+<pre class="r"><code>library(R.matlab)
+library(tidyverse)</code></pre>
+<pre class="r"><code>library(dplyr)
+library(R.matlab)
+library(lubridate)
+library(ncdf4)
+library(ggplot2)
+library(devtools)
+library(Bilinear)
+library(interp) </code></pre>
+<div id="modis" class="section level2">
+<h2>MODIS</h2>
+<div id="reading-fire-data" class="section level4">
+<h4>Reading fire data</h4>
+<pre class="r"><code>modis_data &lt;- read.csv(&#39;C:\\Users\\shrut\\Desktop\\SDS Project\\fire_archive_M6_164945.csv&#39;)</code></pre>
+</div>
+<div id="setting-up-latitude-longitude-boundaries-and-sorting-data" class="section level4">
+<h4>Setting up Latitude, Longitude boundaries and sorting data</h4>
+<pre class="r"><code>modis_data_lat_filter &lt;- modis_data[modis_data$latitude &gt; 30.4 &amp; modis_data$latitude &lt; 37.3 ,]
+modis_data_lon_filter &lt;- modis_data_lat_filter[modis_data_lat_filter$longitude &gt; -124 &amp; modis_data_lat_filter$longitude &lt; -111.8 ,]
+dates &lt;- c(modis_data_lon_filter[&#39;acq_date&#39;])
+count_table &lt;- as.data.frame(table(dates))
+counts_table_order &lt;- count_table[order(-count_table$Freq),]</code></pre>
+<p>From the above code we can have a clear view about the dates where fire was significant, the table counts_table shows the frequency of fire counts on each day for the year 2018.</p>
+<p>So, since the days with and without fire counts would be comapred, let’s first begin with the days where fire counts were significant.</p>
+</div>
+</div>
+<div id="tropomi" class="section level2">
+<h2>TROPOMI</h2>
+<div id="august" class="section level3">
+<h3>August</h3>
+<div id="reading-tropomi-no2-data" class="section level4">
+<h4>Reading TROPOMI NO<sub>2</sub> Data</h4>
+<pre class="r"><code>memory.limit(size=56000)</code></pre>
+<pre><code>## [1] 56000</code></pre>
+<pre class="r"><code>no2_data_filename &lt;- readMat(&#39;C:\\Users\\shrut\\Desktop\\SDS Project\\data files\\CONUS_2018_08.mat&#39;, package=&#39;rmatio&#39;)</code></pre>
+</div>
+</div>
+<div id="november" class="section level3">
+<h3>November</h3>
+<div id="reading-tropomi-no2-data-1" class="section level4">
+<h4>Reading TROPOMI NO<sub>2</sub> Data</h4>
+<pre class="r"><code>memory.limit(size=56000)</code></pre>
+<pre><code>## [1] 56000</code></pre>
+<pre class="r"><code>no2_data_filename_nov &lt;- readMat(&#39;C:\\Users\\shrut\\Downloads\\CONUS_2018_11.mat&#39;, package=&#39;rmatio&#39;)</code></pre>
+<p>Now the TROPOMI data is read for both the months of August and November, the code below shows working and handing .mat data.</p>
+</div>
+<div id="august-1" class="section level4">
+<h4>August</h4>
+</div>
+<div id="defining-parameters-for-tropomi-no2-data" class="section level4">
+<h4>Defining parameters for TROPOMI NO<sub>2</sub> Data</h4>
+<pre class="r"><code>lat &lt;- no2_data_filename[[&quot;output.subset&quot;]][5]
+no2_lat &lt;- lat[[1]]
+lon &lt;- no2_data_filename[[&quot;output.subset&quot;]][6]
+no2_lon &lt;- lon[[1]]
+conc &lt;- no2_data_filename[[&quot;output.subset&quot;]][8]
+no2_conc &lt;- conc[[1]]*6.022*10**19
+values_day &lt;- no2_data_filename[[&quot;output.subset&quot;]][12]
+no2_dates &lt;- values_day[[1]]
+qa_values &lt;- no2_data_filename[[&quot;output.subset&quot;]][7]
+no2_qa &lt;- qa_values[[1]]</code></pre>
+</div>
+<div id="setting-up-latitude-longitude-boundaries-and-changing-date-time-format" class="section level4">
+<h4>Setting up Latitude, Longitude boundaries and changing date-time format</h4>
+<pre class="r"><code>no2_data&lt;- data.frame(&quot;Latitude&quot; = c(no2_lat), &quot;Longitude&quot; = c(no2_lon), &quot;NO2_Concentration&quot; = c(no2_conc),&quot;QA_Value&quot; = c(no2_qa), &quot;Dates&quot; = c(no2_dates))
+filter_1 &lt;- filter(no2_data, Latitude &gt; 30.4 &amp; Latitude &lt; 37.3 &amp; Longitude &gt; -124 &amp; Longitude &lt; -111.8)
+filter_2 &lt;- filter(filter_1, &quot;QA_value&quot; &gt; 0.5)
+Matlab2Rdate &lt;- function(val) as.Date(val - 1, origin = &#39;0000-01-01&#39;)
+change_dates &lt;- Matlab2Rdate(filter_2[[&quot;Dates&quot;]])
+modified_date &lt;- ymd(change_dates)</code></pre>
+<p>The above steps are similarly implemented to November data as well, as the data is read and converted into readable form, the next step is sorting the data based on fire and non-fire dates.</p>
+</div>
+<div id="november-1" class="section level4">
+<h4>November</h4>
+</div>
+<div id="defining-parameters-for-tropomi-no2-data-1" class="section level4">
+<h4>Defining parameters for TROPOMI NO<sub>2</sub> Data</h4>
+<pre class="r"><code>lat_nov &lt;- no2_data_filename_nov[[&quot;output.subset&quot;]][5]
+no2_lat_nov &lt;- lat_nov[[1]]
+lon_nov &lt;- no2_data_filename_nov[[&quot;output.subset&quot;]][6]
+no2_lon_nov &lt;- lon_nov[[1]]
+conc_nov &lt;- no2_data_filename_nov[[&quot;output.subset&quot;]][8]
+no2_conc_nov &lt;- conc_nov[[1]]*6.022*10**19
+values_day_nov &lt;- no2_data_filename_nov[[&quot;output.subset&quot;]][12]
+no2_dates_nov &lt;- values_day_nov[[1]]
+qa_values_nov &lt;- no2_data_filename_nov[[&quot;output.subset&quot;]][7]
+no2_qa_nov &lt;- qa_values_nov[[1]]</code></pre>
+</div>
+<div id="setting-up-latitude-longitude-boundaries-and-changing-date-time-format-1" class="section level4">
+<h4>Setting up Latitude, Longitude boundaries and changing date-time format</h4>
+<pre class="r"><code>no2_data_nov&lt;- data.frame(&quot;Latitude_nov&quot; = c(no2_lat_nov), &quot;Longitude_nov&quot; = c(no2_lon_nov), &quot;NO2_Concentration_nov&quot; = c(no2_conc_nov),&quot;QA_Value_nov&quot; = c(no2_qa_nov), &quot;Dates_nov&quot; = c(no2_dates_nov))
+filter_1_nov &lt;- filter(no2_data_nov, Latitude_nov &gt; 30.4 &amp; Latitude_nov &lt; 37.3 &amp; Longitude_nov &gt; -124 &amp; Longitude_nov &lt; -111.8)
+filter_2_nov &lt;- filter(filter_1_nov, &quot;QA_value_nov&quot; &gt; 0.5)
+Matlab2Rdate_nov &lt;- function(val) as.Date(val - 1, origin = &#39;0000-01-01&#39;)
+change_dates_nov &lt;- Matlab2Rdate_nov(filter_2_nov[[&quot;Dates_nov&quot;]])
+modified_date_nov &lt;- ymd(change_dates_nov)</code></pre>
+</div>
+<div id="sorting-data-based-on-fire-dates" class="section level4">
+<h4>Sorting data based on fire dates</h4>
+<pre class="r"><code>fire_date_plot_aug_8 &lt;- filter(filter_2, modified_date == &#39;2018-08-08&#39;)
+fire_date_plot_nov_11 &lt;- filter(filter_2_nov, modified_date_nov == &#39;2018-11-09&#39;)</code></pre>
+</div>
+<div id="sorting-data-based-on-non-fire-dates" class="section level4">
+<h4>Sorting data based on non-fire dates</h4>
+<pre class="r"><code>filter_2_nov$converted_dates_nov&lt;- c(modified_date_nov)
+fire_date_plot_nov_22 &lt;- filter(filter_2_nov, modified_date_nov == &#39;2018-11-22&#39;)
+fire_date_plot_nov_23 &lt;- filter(filter_2_nov, modified_date_nov == &#39;2018-11-23&#39;)
+fire_date_plot_nov_28 &lt;- filter(filter_2_nov, modified_date_nov == &#39;2018-11-28&#39;)
+fire_date_plot_aug_18 &lt;- filter(filter_2, modified_date == &#39;2018-08-18&#39;)
+fire_date_plot_aug_24 &lt;- filter(filter_2, modified_date == &#39;2018-08-24&#39;)
+fire_date_plot_aug_25 &lt;- filter(filter_2, modified_date == &#39;2018-08-25&#39;)</code></pre>
+<p>Now since the TROPOMI data is sorted based on fire and non-fire dates, the next step would be moving to handling GEOS-CF model data.</p>
+</div>
+</div>
+</div>
+<div id="geos-cf-1" class="section level2">
+<h2>GEOS-CF</h2>
+<div id="august-2" class="section level3">
+<h3>August</h3>
+<div id="reading-no2-data-for-fire-dates" class="section level4">
+<h4>Reading NO<sub>2</sub> Data for fire dates</h4>
+<pre class="r"><code>setwd(&#39;C:\\Users\\shrut\\Downloads&#39;)
+data &lt;- nc_open(&#39;GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20180808_0530z.nc4&#39;)</code></pre>
+</div>
+<div id="defining-parameters-for-no2-data" class="section level4">
+<h4>Defining parameters for NO<sub>2</sub> Data</h4>
+<pre class="r"><code>lon_geos &lt;- ncvar_get(data, &quot;lon&quot;)
+lat_geos &lt;- ncvar_get(data, &quot;lat&quot;)
+CONC_geos_1 &lt;- ncvar_get(data, &quot;TOTCOL_NO2&quot;)
+CONC_geos &lt;- CONC_geos_1*10**15</code></pre>
+</div>
+<div id="setting-up-latitude-longitude-boundaries-and-creating-a-longitude-latitude-meshgrid" class="section level4">
+<h4>Setting up Latitude, Longitude boundaries and creating a Longitude, Latitude meshgrid</h4>
+<pre class="r"><code>Latitude &lt;- c(lat_geos)
+Longitude &lt;- c(lon_geos)
+Lat_filter &lt;- Latitude[Latitude &gt; 30.4 &amp; Latitude &lt; 37.3]
+Lon_filter &lt;- Longitude[Longitude &gt; -124 &amp; Longitude &lt; -111.8]
+Lat_lon_grid &lt;- meshgrid(Longitude, Latitude)
+plot_data_aug_8 &lt;- data.frame(&quot;y_lat&quot; = c(Lat_lon_grid[[&quot;Y&quot;]]), &quot;x_lon&quot; = c(Lat_lon_grid[[&quot;X&quot;]]), &quot;z_Con&quot; = c(CONC_geos))</code></pre>
+<p>Since TROPOMI data is obtained from the NASA-TROPOMI satellite, since satellite is not effective in capturing data at all locations. And as GEOS-CF is a model, it is continuous and has data values at all locations. As both the data sets are differing in terms of locations, it wouldn’t be appropriate to compare them. Therefore, it would be appropriate when the GEOS-CF data are interpolated at TROPOMI locations. The code shown below does the following.</p>
+<div id="interpolating-geos-cf-data-at-tropomi-locations" class="section level5">
+<h5>Interpolating GEOS-CF data at TROPOMI locations</h5>
+<pre class="r"><code>y1 &lt;- Latitude 
+x1 &lt;- Longitude
+z1 &lt;- CONC_geos 
+x0 &lt;- fire_date_plot_aug_8[&#39;Longitude&#39;]
+y0 &lt;- fire_date_plot_aug_8[&#39;Latitude&#39;]
+x2 &lt;- as.numeric(unlist(x0))
+y2&lt;- as.numeric(unlist(y0))
+latlon_aug_8.bil &lt;- bilinear(x1,y1,z1,x2,y2)</code></pre>
+<p>The above steps could be similarly repeated for non-fire dates in the month of August, and fire and non-fire dates in November month as well.</p>
+</div>
+</div>
+</div>
+<div id="november-2" class="section level3">
+<h3>November</h3>
+<div id="reading-no2-data-for-fire-dates-1" class="section level4">
+<h4>Reading NO<sub>2</sub> Data for fire dates</h4>
+<pre class="r"><code>setwd(&#39;C:\\Users\\shrut\\Downloads&#39;)
+data_nov_11 &lt;- nc_open(&#39;GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20180911_0930z.nc4&#39;)</code></pre>
+</div>
+<div id="defining-parameters-for-no2-data-1" class="section level4">
+<h4>Defining parameters for NO<sub>2</sub> Data</h4>
+<pre class="r"><code>lon_geos_nov &lt;- ncvar_get(data_nov_11, &quot;lon&quot;)
+lat_geos_nov &lt;- ncvar_get(data_nov_11, &quot;lat&quot;)
+CONC_geos_nov_1 &lt;- ncvar_get(data_nov_11, &quot;TOTCOL_NO2&quot;)
+CONC_geos_nov &lt;- CONC_geos_nov_1*10**15</code></pre>
+</div>
+<div id="setting-up-latitude-longitude-boundaries-and-creating-a-longitude-latitude-meshgrid-1" class="section level4">
+<h4>Setting up Latitude, Longitude boundaries and creating a Longitude, Latitude meshgrid</h4>
+<pre class="r"><code>Latitude_nov &lt;- c(lat_geos_nov)
+Longitude_nov &lt;- c(lon_geos_nov)
+Lat_filter_nov &lt;- Latitude_nov[Latitude_nov &gt; 30.4 &amp; Latitude_nov &lt; 37.3]
+Lon_filter_nov &lt;- Longitude_nov[Longitude_nov &gt; -124 &amp; Longitude_nov &lt; -111.8]
+Lat_lon_grid_nov &lt;- meshgrid(Longitude_nov, Latitude_nov)
+plot_data_nov_11 &lt;- data.frame(&quot;y_lat_nov&quot; = c(Lat_lon_grid_nov[[&quot;Y&quot;]]), &quot;x_lon_nov&quot; = c(Lat_lon_grid_nov[[&quot;X&quot;]]), &quot;z_Con_nov&quot; = c(CONC_geos_nov))</code></pre>
+<div id="interpolating-geos-cf-data-at-tropomi-locations-1" class="section level5">
+<h5>Interpolating GEOS-CF data at TROPOMI locations</h5>
+<pre class="r"><code>y1_nov &lt;- Latitude_nov 
+x1_nov &lt;- Longitude_nov
+z1_nov &lt;- CONC_geos_nov
+x0_nov &lt;- fire_date_plot_nov_11[&#39;Longitude_nov&#39;]
+y0_nov &lt;- fire_date_plot_nov_11[&#39;Latitude_nov&#39;]
+x2_nov &lt;- as.numeric(unlist(x0_nov))
+y2_nov&lt;- as.numeric(unlist(y0_nov))
+latlon_nov_11.bil &lt;- bilinear(x1_nov,y1_nov,z1_nov,x2_nov,y2_nov)
+plot_data_interp_nov_11 &lt;- data.frame(&quot;y_lat_interp_nov&quot; = c(latlon_nov_11.bil[[&quot;y&quot;]]), &quot;x_lon_interp_nov&quot; = c(latlon_nov_11.bil[[&quot;x&quot;]]), &quot;z_Con_interp_nov&quot; = c(latlon_nov_11.bil[[&quot;z&quot;]]*0.001))</code></pre>
+</div>
+</div>
+</div>
+<div id="august-3" class="section level3">
+<h3>August</h3>
+<div id="reading-no2-data-for-non-fire-dates" class="section level4">
+<h4>Reading NO<sub>2</sub> Data for non-fire dates</h4>
+<pre class="r"><code>setwd(&#39;C:\\Users\\shrut\\Downloads\\r-project file\\no-fire dates&#39;)
+data_aug_18 &lt;- nc_open(&#39;GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20180818_0630z.nc4&#39;)
+data_aug_24 &lt;- nc_open(&#39;GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20180824_0530z.nc4&#39;)
+data_aug_25 &lt;- nc_open(&#39;GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20180825_0530z.nc4&#39;)</code></pre>
+</div>
+<div id="defining-parameters-for-no2-data-2" class="section level4">
+<h4>Defining parameters for NO<sub>2</sub> Data</h4>
+<pre class="r"><code>lon_geos_aug_18 &lt;- ncvar_get(data_aug_18, &quot;lon&quot;)
+lat_geos_aug_18 &lt;- ncvar_get(data_aug_18, &quot;lat&quot;)
+CONC_geos_aug_18_1 &lt;- ncvar_get(data_aug_18, &quot;TOTCOL_NO2&quot;)
+CONC_geos_aug_18 &lt;- CONC_geos_aug_18_1*10**15
+
+lon_geos_aug_24 &lt;- ncvar_get(data_aug_24, &quot;lon&quot;)
+lat_geos_aug_24 &lt;- ncvar_get(data_aug_24, &quot;lat&quot;)
+CONC_geos_aug_24_1 &lt;- ncvar_get(data_aug_24, &quot;TOTCOL_NO2&quot;)
+CONC_geos_aug_24 &lt;- CONC_geos_aug_24_1*10**15
+
+lon_geos_aug_25 &lt;- ncvar_get(data_aug_25, &quot;lon&quot;)
+lat_geos_aug_25 &lt;- ncvar_get(data_aug_25, &quot;lat&quot;)
+CONC_geos_aug_25_1 &lt;- ncvar_get(data_aug_25, &quot;TOTCOL_NO2&quot;)
+CONC_geos_aug_25 &lt;- CONC_geos_aug_25_1*10**15</code></pre>
+</div>
+<div id="setting-up-latitude-longitude-boundaries-and-creating-a-longitude-latitude-meshgrid-2" class="section level4">
+<h4>Setting up Latitude, Longitude boundaries and creating a Longitude, Latitude meshgrid</h4>
+<pre class="r"><code>Latitude_aug_18 &lt;- c(lat_geos_aug_18)
+Longitude_aug_18 &lt;- c(lon_geos_aug_18)
+Lat_filter_aug_18 &lt;- Latitude_aug_18[Latitude_aug_18 &gt; 30.4 &amp; Latitude_aug_18 &lt; 37.3]
+Lon_filter_aug_18 &lt;- Longitude_aug_18[Longitude_aug_18 &gt; -124 &amp; Longitude_aug_18 &lt; -111.8]
+Lat_lon_grid_aug_18 &lt;- meshgrid(Longitude_aug_18, Latitude_aug_18)
+
+Latitude_aug_24 &lt;- c(lat_geos_aug_24)
+Longitude_aug_24 &lt;- c(lon_geos_aug_24)
+Lat_filter_aug_24 &lt;- Latitude_aug_24[Latitude_aug_24 &gt; 30.4 &amp; Latitude_aug_24 &lt; 37.3]
+Lon_filter_aug_24 &lt;- Longitude_aug_24[Longitude_aug_24 &gt; -124 &amp; Longitude_aug_24 &lt; -111.8]
+Lat_lon_grid_aug_24 &lt;- meshgrid(Longitude_aug_24, Latitude_aug_24)
+
+Latitude_aug_25 &lt;- c(lat_geos_aug_25)
+Longitude_aug_25 &lt;- c(lon_geos_aug_25)
+Lat_filter_aug_25 &lt;- Latitude_aug_25[Latitude_aug_25 &gt; 30.4 &amp; Latitude_aug_25 &lt; 37.3]
+Lon_filter_aug_25 &lt;- Longitude_aug_25[Longitude_aug_25 &gt; -124 &amp; Longitude_aug_25 &lt; -111.8]
+Lat_lon_grid_aug_25 &lt;- meshgrid(Longitude_aug_25, Latitude_aug_25)
+
+plot_data_aug_18 &lt;- data.frame(&quot;y_lat_nov&quot; = c(Lat_lon_grid_aug_18[[&quot;Y&quot;]]), &quot;x_lon_nov&quot; = c(Lat_lon_grid_aug_18[[&quot;X&quot;]]), &quot;z_Con_nov&quot; = c(CONC_geos_aug_18))
+plot_data_aug_24 &lt;- data.frame(&quot;y_lat_nov&quot; = c(Lat_lon_grid_aug_24[[&quot;Y&quot;]]), &quot;x_lon_nov&quot; = c(Lat_lon_grid_aug_24[[&quot;X&quot;]]), &quot;z_Con_nov&quot; = c(CONC_geos_aug_24))
+plot_data_aug_25 &lt;- data.frame(&quot;y_lat_nov&quot; = c(Lat_lon_grid_aug_25[[&quot;Y&quot;]]), &quot;x_lon_nov&quot; = c(Lat_lon_grid_aug_25[[&quot;X&quot;]]), &quot;z_Con_nov&quot; = c(CONC_geos_aug_25))</code></pre>
+<div id="interpolating-geos-cf-data-at-tropomi-locations-for-non-fire-dates" class="section level5">
+<h5>Interpolating GEOS-CF data at TROPOMI locations for non fire dates</h5>
+<pre class="r"><code>y1_aug_18 &lt;- Latitude_aug_18
+x1_aug_18 &lt;- Longitude_aug_18
+z1_aug_18 &lt;- CONC_geos_aug_18
+x0_aug_18 &lt;- fire_date_plot_aug_18[&#39;Longitude&#39;]
+y0_aug_18 &lt;- fire_date_plot_aug_18[&#39;Latitude&#39;]
+x2_aug_18 &lt;- as.numeric(unlist(x0_aug_18))
+y2_aug_18&lt;- as.numeric(unlist(y0_aug_18))
+latlon_aug_18.bil &lt;- bilinear(x1_aug_18,y1_aug_18,z1_aug_18,x2_aug_18,y2_aug_18)
+plot_data_interp_aug_18 &lt;- data.frame(&quot;y_lat_interp_nov&quot; = c(latlon_aug_18.bil[[&quot;y&quot;]]), &quot;x_lon_interp_nov&quot; = c(latlon_aug_18.bil[[&quot;x&quot;]]), &quot;z_Con_interp_nov&quot; = c(latlon_aug_18.bil[[&quot;z&quot;]]*0.001))
+
+y1_aug_24 &lt;- Latitude_aug_24 
+x1_aug_24 &lt;- Longitude_aug_24
+z1_aug_24 &lt;- CONC_geos_aug_24
+x0_aug_24 &lt;- fire_date_plot_aug_24[&#39;Longitude&#39;]
+y0_aug_24 &lt;- fire_date_plot_aug_24[&#39;Latitude&#39;]
+x2_aug_24 &lt;- as.numeric(unlist(x0_aug_24))
+y2_aug_24&lt;- as.numeric(unlist(y0_aug_24))
+latlon_aug_24.bil &lt;- bilinear(x1_aug_24,y1_aug_24,z1_aug_24,x2_aug_24,y2_aug_24)
+plot_data_interp_aug_24 &lt;- data.frame(&quot;y_lat_interp_nov&quot; = c(latlon_aug_24.bil[[&quot;y&quot;]]), &quot;x_lon_interp_nov&quot; = c(latlon_aug_24.bil[[&quot;x&quot;]]), &quot;z_Con_interp_nov&quot; = c(latlon_aug_24.bil[[&quot;z&quot;]]*0.001))
+
+y1_aug_25 &lt;- Latitude_aug_25 
+x1_aug_25 &lt;- Longitude_aug_25 
+z1_aug_25 &lt;- CONC_geos_aug_25 
+x0_aug_25 &lt;- fire_date_plot_aug_25[&#39;Longitude&#39;]
+y0_aug_25 &lt;- fire_date_plot_aug_25[&#39;Latitude&#39;]
+x2_aug_25 &lt;- as.numeric(unlist(x0_aug_25))
+y2_aug_25&lt;- as.numeric(unlist(y0_aug_25))
+latlon_aug_25.bil &lt;- bilinear(x1_aug_25,y1_aug_25,z1_aug_25,x2_aug_25,y2_aug_25)
+plot_data_interp_aug_25 &lt;- data.frame(&quot;y_lat_interp_nov&quot; = c(latlon_aug_25.bil[[&quot;y&quot;]]), &quot;x_lon_interp_nov&quot; = c(latlon_aug_25.bil[[&quot;x&quot;]]), &quot;z_Con_interp_nov&quot; = c(latlon_aug_25.bil[[&quot;z&quot;]]*0.001))</code></pre>
+</div>
+<div id="interpolating-geos-cf-data-at-tropomi-locations-for-fire-dates" class="section level5">
+<h5>Interpolating GEOS-CF data at TROPOMI locations for fire dates</h5>
+<pre class="r"><code>y1 &lt;- Latitude 
+x1 &lt;- Longitude
+z1 &lt;- CONC_geos 
+x0 &lt;- fire_date_plot_aug_8[&#39;Longitude&#39;]
+y0 &lt;- fire_date_plot_aug_8[&#39;Latitude&#39;]
+x2 &lt;- as.numeric(unlist(x0))
+y2&lt;- as.numeric(unlist(y0))
+latlon_aug_8.bil &lt;- bilinear(x1,y1,z1,x2,y2)
+plot_data_interp_aug_8 &lt;- data.frame(&quot;y_lat_interp&quot; = c(latlon_aug_8.bil[[&quot;y&quot;]]), &quot;x_lon_interp&quot; = c(latlon_aug_8.bil[[&quot;x&quot;]]), &quot;z_Con_interp&quot; = c(latlon_aug_8.bil[[&quot;z&quot;]]*0.001))</code></pre>
+</div>
+</div>
+</div>
+<div id="november-3" class="section level3">
+<h3>November</h3>
+<div id="reading-no2-data-for-non-fire-dates-1" class="section level4">
+<h4>Reading NO<sub>2</sub> Data for non-fire dates</h4>
+<pre class="r"><code>setwd(&#39;C:\\Users\\shrut\\Downloads\\r-project file\\no-fire dates&#39;)
+data_nov_22 &lt;- nc_open(&#39;GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20181122_0630z.nc4&#39;)
+data_nov_23 &lt;- nc_open(&#39;GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20181123_0630z.nc4&#39;)
+data_nov_28 &lt;- nc_open(&#39;GEOS-CF.v01.rpl.xgc_tavg_1hr_g1440x721_x1.20181128_0730z.nc4&#39;)</code></pre>
+</div>
+<div id="defining-parameters-for-no2-data-3" class="section level4">
+<h4>Defining parameters for NO<sub>2</sub> Data</h4>
+<pre class="r"><code>lon_geos_nov_22 &lt;- ncvar_get(data_nov_22, &quot;lon&quot;)
+lat_geos_nov_22 &lt;- ncvar_get(data_nov_22, &quot;lat&quot;)
+CONC_geos_nov_22_1 &lt;- ncvar_get(data_nov_22, &quot;TOTCOL_NO2&quot;)
+CONC_geos_nov_22 &lt;- CONC_geos_nov_22_1*10**15
+
+lon_geos_nov_23 &lt;- ncvar_get(data_nov_23, &quot;lon&quot;)
+lat_geos_nov_23 &lt;- ncvar_get(data_nov_23, &quot;lat&quot;)
+CONC_geos_nov_23_1 &lt;- ncvar_get(data_nov_23, &quot;TOTCOL_NO2&quot;)
+CONC_geos_nov_23 &lt;- CONC_geos_nov_23_1*10**15
+
+lon_geos_nov_28 &lt;- ncvar_get(data_nov_28, &quot;lon&quot;)
+lat_geos_nov_28 &lt;- ncvar_get(data_nov_28, &quot;lat&quot;)
+CONC_geos_nov_28_1 &lt;- ncvar_get(data_nov_28, &quot;TOTCOL_NO2&quot;)
+CONC_geos_nov_28 &lt;- CONC_geos_nov_28_1*10**15</code></pre>
+</div>
+<div id="setting-up-latitude-longitude-boundaries-and-creating-a-longitude-latitude-meshgrid-3" class="section level4">
+<h4>Setting up Latitude, Longitude boundaries and creating a Longitude, Latitude meshgrid</h4>
+<pre class="r"><code>Latitude_nov_22 &lt;- c(lat_geos_nov_22)
+Longitude_nov_22 &lt;- c(lon_geos_nov_22)
+Lat_filter_nov_22 &lt;- Latitude_nov_22[Latitude_nov_22 &gt; 30.4 &amp; Latitude_nov_22 &lt; 37.3]
+Lon_filter_nov_22 &lt;- Longitude_nov_22[Longitude_nov_22 &gt; -124 &amp; Longitude_nov_22 &lt; -111.8]
+Lat_lon_grid_nov_22 &lt;- meshgrid(Longitude_nov_22, Latitude_nov_22)
+
+Latitude_nov_23 &lt;- c(lat_geos_nov_23)
+Longitude_nov_23 &lt;- c(lon_geos_nov_23)
+Lat_filter_nov_23 &lt;- Latitude_nov_23[Latitude_nov_23 &gt; 30.4 &amp; Latitude_nov_23 &lt; 37.3]
+Lon_filter_nov_23 &lt;- Longitude_nov_23[Longitude_nov_23 &gt; -124 &amp; Longitude_nov_23 &lt; -111.8]
+Lat_lon_grid_nov_23 &lt;- meshgrid(Longitude_nov_23, Latitude_nov_23)
+
+Latitude_nov_28 &lt;- c(lat_geos_nov_28)
+Longitude_nov_28 &lt;- c(lon_geos_nov_28)
+Lat_filter_nov_28 &lt;- Latitude_nov_28[Latitude_nov_28 &gt; 30.4 &amp; Latitude_nov_28 &lt; 37.3]
+Lon_filter_nov_28 &lt;- Longitude_nov_28[Longitude_nov_28 &gt; -124 &amp; Longitude_nov_28 &lt; -111.8]
+Lat_lon_grid_nov_28 &lt;- meshgrid(Longitude_nov_28, Latitude_nov_28)
+
+plot_data_nov_22 &lt;- data.frame(&quot;y_lat_nov&quot; = c(Lat_lon_grid_nov_22[[&quot;Y&quot;]]), &quot;x_lon_nov&quot; = c(Lat_lon_grid_nov_22[[&quot;X&quot;]]), &quot;z_Con_nov&quot; = c(CONC_geos_nov_22))
+plot_data_nov_23 &lt;- data.frame(&quot;y_lat_nov&quot; = c(Lat_lon_grid_nov_23[[&quot;Y&quot;]]), &quot;x_lon_nov&quot; = c(Lat_lon_grid_nov_23[[&quot;X&quot;]]), &quot;z_Con_nov&quot; = c(CONC_geos_nov_23))
+plot_data_nov_28 &lt;- data.frame(&quot;y_lat_nov&quot; = c(Lat_lon_grid_nov_28[[&quot;Y&quot;]]), &quot;x_lon_nov&quot; = c(Lat_lon_grid_nov_28[[&quot;X&quot;]]), &quot;z_Con_nov&quot; = c(CONC_geos_nov_28))</code></pre>
+<div id="interpolating-geos-cf-data-at-tropomi-locations-for-non-fire-dates-1" class="section level5">
+<h5>Interpolating GEOS-CF data at TROPOMI locations for non fire dates</h5>
+<pre class="r"><code>y1_nov_22 &lt;- Latitude_nov_22 
+x1_nov_22 &lt;- Longitude_nov_22
+z1_nov_22 &lt;- CONC_geos_nov_22
+x0_nov_22 &lt;- fire_date_plot_nov_22[&#39;Longitude_nov&#39;]
+y0_nov_22 &lt;- fire_date_plot_nov_22[&#39;Latitude_nov&#39;]
+x2_nov_22 &lt;- as.numeric(unlist(x0_nov_22))
+y2_nov_22&lt;- as.numeric(unlist(y0_nov_22))
+latlon_nov_22.bil &lt;- bilinear(x1_nov_22,y1_nov_22,z1_nov_22,x2_nov_22,y2_nov_22)
+plot_data_interp_nov_22 &lt;- data.frame(&quot;y_lat_interp_nov&quot; = c(latlon_nov_22.bil[[&quot;y&quot;]]), &quot;x_lon_interp_nov&quot; = c(latlon_nov_22.bil[[&quot;x&quot;]]), &quot;z_Con_interp_nov&quot; = c(latlon_nov_22.bil[[&quot;z&quot;]]*0.001))
+
+y1_nov_23 &lt;- Latitude_nov_23 
+x1_nov_23 &lt;- Longitude_nov_23
+z1_nov_23 &lt;- CONC_geos_nov_23
+x0_nov_23 &lt;- fire_date_plot_nov_23[&#39;Longitude_nov&#39;]
+y0_nov_23 &lt;- fire_date_plot_nov_23[&#39;Latitude_nov&#39;]
+x2_nov_23 &lt;- as.numeric(unlist(x0_nov_23))
+y2_nov_23&lt;- as.numeric(unlist(y0_nov_23))
+latlon_nov_23.bil &lt;- bilinear(x1_nov_23,y1_nov_23,z1_nov_23,x2_nov_23,y2_nov_23)
+plot_data_interp_nov_23 &lt;- data.frame(&quot;y_lat_interp_nov&quot; = c(latlon_nov_23.bil[[&quot;y&quot;]]), &quot;x_lon_interp_nov&quot; = c(latlon_nov_23.bil[[&quot;x&quot;]]), &quot;z_Con_interp_nov&quot; = c(latlon_nov_23.bil[[&quot;z&quot;]]*0.001))
+
+y1_nov_28 &lt;- Latitude_nov_28 
+x1_nov_28 &lt;- Longitude_nov_28
+z1_nov_28 &lt;- CONC_geos_nov_28
+x0_nov_28 &lt;- fire_date_plot_nov_28[&#39;Longitude_nov&#39;]
+y0_nov_28 &lt;- fire_date_plot_nov_28[&#39;Latitude_nov&#39;]
+x2_nov_28 &lt;- as.numeric(unlist(x0_nov_28))
+y2_nov_28&lt;- as.numeric(unlist(y0_nov_28))
+latlon_nov_28.bil &lt;- bilinear(x1_nov_28,y1_nov_28,z1_nov_28,x2_nov_28,y2_nov_28)
+plot_data_interp_nov_28 &lt;- data.frame(&quot;y_lat_interp_nov&quot; = c(latlon_nov_28.bil[[&quot;y&quot;]]), &quot;x_lon_interp_nov&quot; = c(latlon_nov_28.bil[[&quot;x&quot;]]), &quot;z_Con_interp_nov&quot; = c(latlon_nov_28.bil[[&quot;z&quot;]]*0.001))</code></pre>
+</div>
+<div id="interpolating-geos-cf-data-at-tropomi-locations-for-fire-dates-1" class="section level5">
+<h5>Interpolating GEOS-CF data at TROPOMI locations for fire dates</h5>
+<pre class="r"><code>y1_nov &lt;- Latitude_nov 
+x1_nov &lt;- Longitude_nov
+z1_nov &lt;- CONC_geos_nov
+x0_nov &lt;- fire_date_plot_nov_11[&#39;Longitude_nov&#39;]
+y0_nov &lt;- fire_date_plot_nov_11[&#39;Latitude_nov&#39;]
+x2_nov &lt;- as.numeric(unlist(x0_nov))
+y2_nov&lt;- as.numeric(unlist(y0_nov))
+latlon_nov_11.bil &lt;- bilinear(x1_nov,y1_nov,z1_nov,x2_nov,y2_nov)
+plot_data_interp_nov_11 &lt;- data.frame(&quot;y_lat_interp_nov&quot; = c(latlon_nov_11.bil[[&quot;y&quot;]]), &quot;x_lon_interp_nov&quot; = c(latlon_nov_11.bil[[&quot;x&quot;]]), &quot;z_Con_interp_nov&quot; = c(latlon_nov_11.bil[[&quot;z&quot;]]*0.001))</code></pre>
+<p>Now that the interpolation is completed, let us compare the TROPIMI and GEOS-Interpolated TROPOMI data by visualizing it in the form of plots. ### August #### Tropomi plots for non fire dates</p>
+<pre class="r"><code>trop_plot_aug_18 &lt;- ggplot(fire_date_plot_aug_18, aes(x=Longitude,y=Latitude, color= NO2_Concentration)) + 
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;TROPOMI data on 2018-08-18&quot;)
+
+trop_plot_aug_24 &lt;- ggplot(fire_date_plot_aug_24, aes(x=Longitude,y=Latitude, color= NO2_Concentration)) + 
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;TROPOMI data on 2018-08-24&quot;)
+
+trop_plot_aug_25 &lt;- ggplot(fire_date_plot_aug_25, aes(x=Longitude,y=Latitude, color= NO2_Concentration)) + 
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;TROPOMI data on 2018-08-25&quot;)</code></pre>
+</div>
+</div>
+<div id="tropomi-plots-for-fire-dates" class="section level4">
+<h4>Tropomi plots for fire dates</h4>
+<pre class="r"><code>trop_plot_aug_8 &lt;- ggplot(fire_date_plot_aug_8,aes(x=Longitude,y=Latitude, color= NO2_Concentration))+
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;TROPOMI data on 2018-08-08&quot;)</code></pre>
+</div>
+</div>
+<div id="november-4" class="section level3">
+<h3>November</h3>
+<div id="tropomi-plots-for-non-fire-dates" class="section level4">
+<h4>Tropomi plots for non fire dates</h4>
+<pre class="r"><code>trop_plot_nov_22 &lt;- ggplot(fire_date_plot_nov_22, aes(x=Longitude_nov,y=Latitude_nov, color= NO2_Concentration_nov))+
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;TROPOMI data on 2018-11-22&quot;)
+
+trop_plot_nov_23 &lt;- ggplot(fire_date_plot_nov_23, aes(x=Longitude_nov,y=Latitude_nov, color= NO2_Concentration_nov)) + 
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;TROPOMI data on 2018-11-23&quot;)
+
+trop_plot_nov_28 &lt;- ggplot(fire_date_plot_nov_28, aes(x=Longitude_nov,y=Latitude_nov, color= NO2_Concentration_nov)) + 
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;TROPOMI data on 2018-11-28&quot;)</code></pre>
+</div>
+<div id="tropomi-plots-for-fire-dates-1" class="section level4">
+<h4>Tropomi plots for fire dates</h4>
+<pre class="r"><code>trop_plot_nov_11 &lt;- ggplot(fire_date_plot_nov_11, aes(x=Longitude_nov,y=Latitude_nov, color= NO2_Concentration_nov)) + 
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot; TROPOMI data on 2018-11-09&quot;)</code></pre>
+</div>
+</div>
+<div id="august-4" class="section level3">
+<h3>August</h3>
+<div id="geos-cf-interpolated-tropomi-plots-for-non-fire-dates" class="section level4">
+<h4>GEOS-CF interpolated TROPOMI plots for non fire dates</h4>
+<pre class="r"><code>interp_plot_aug_18 &lt;- ggplot(plot_data_interp_aug_18,aes(x_lon_interp_nov, y = y_lat_interp_nov, color = z_Con_interp_nov))+
+  geom_point()+
+  xlab(&#39;Longitude&#39;)+
+  ylab(&#39;Latitude&#39;)+
+  labs(color = &#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;GEOS-CF Interppolated TROPOMI on 2018-08-18&quot;)
+
+interp_plot_aug_24 &lt;- ggplot(plot_data_interp_aug_24,aes(x_lon_interp_nov, y = y_lat_interp_nov, color = z_Con_interp_nov))+
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;GEOS-CF Interppolated TROPOMI on 2018-08-24&quot;)
+
+interp_plot_aug_25 &lt;- ggplot(plot_data_interp_aug_25,aes(x_lon_interp_nov, y = y_lat_interp_nov, color = z_Con_interp_nov))+
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;GEOS-CF Interppolated TROPOMI on 2018-08-25&quot;)</code></pre>
+</div>
+<div id="geos-cf-interpolated-tropomi-plots-for-fire-dates" class="section level4">
+<h4>GEOS-CF interpolated TROPOMI plots for fire dates</h4>
+<pre class="r"><code>interp_plot_aug_8 &lt;- ggplot(plot_data_interp_aug_8,aes(x_lon_interp, y = y_lat_interp, color = z_Con_interp))+
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;GEOS-CF Interppolated TROPOMI on 2018-08-08&quot;)</code></pre>
+</div>
+</div>
+<div id="november-5" class="section level3">
+<h3>November</h3>
+<div id="geo-cf-interpolated-tropomi-plots-for-non-fire-dates" class="section level4">
+<h4>GEO-CF interpolated TROPOMI plots for non fire dates</h4>
+<pre class="r"><code>interp_plot_nov_22 &lt;- ggplot(plot_data_interp_nov_22,aes(x_lon_interp_nov, y = y_lat_interp_nov, color = z_Con_interp_nov))+
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;GEOS-CF Interppolated TROPOMI on 2018-11-22&quot;)
+
+interp_plot_nov_23 &lt;- ggplot(plot_data_interp_nov_23,aes(x_lon_interp_nov, y = y_lat_interp_nov, color = z_Con_interp_nov))+
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;GEOS-CF Interppolated TROPOMI on 2018-11-23&quot;)
+
+interp_plot_nov_28 &lt;- ggplot(plot_data_interp_nov_28,aes(x_lon_interp_nov, y = y_lat_interp_nov, color = z_Con_interp_nov))+
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;GEOS-CF Interppolated TROPOMI on 2018-11-28&quot;)</code></pre>
+</div>
+<div id="geos-cf-interpolated-tropomi-plots-for-fire-dates-1" class="section level4">
+<h4>GEOS-CF interpolated TROPOMI plots for fire dates</h4>
+<pre class="r"><code>interp_plot_nov_11 &lt;- ggplot(plot_data_interp_nov_11,aes(x_lon_interp_nov, y = y_lat_interp_nov, color = z_Con_interp_nov))+
+  geom_point()+
+  xlab(&quot;Longitude&quot;)+
+  ylab(&quot;Latitude&quot;)+
+  labs(color=&#39;NO2 Concentration in molecules/m2&#39;)+
+  ggtitle(&quot;GEOS-CF Interppolated TROPOMI on 2018-09-11&quot;)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="data-visualisation" class="section level1">
+<h1>Data Visualisation</h1>
+<p>Since we have performed interpolation, we could now visualize and see how the TROPOMI and GEOS-CF interpolated TROPOMI varies with respect to fire and non-fire dates.</p>
+<div id="non-fire-dates---august-18th" class="section level4">
+<h4>Non fire dates - August 18th</h4>
+<pre class="r"><code>trop_plot_aug_18</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_aug_18</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-41-2.png" width="672" /></p>
+</div>
+<div id="non-fire-dates---august-24th" class="section level4">
+<h4>Non fire dates - August 24th</h4>
+<pre class="r"><code>trop_plot_aug_24</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_aug_24</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-42-2.png" width="672" /></p>
+</div>
+<div id="non-fire-dates---august-25th" class="section level4">
+<h4>Non fire dates - August 25th</h4>
+<pre class="r"><code>trop_plot_aug_25</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_aug_25</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-43-2.png" width="672" /></p>
+</div>
+<div id="fire-dates---august-8th" class="section level4">
+<h4>Fire dates - August 8th</h4>
+<pre class="r"><code>trop_plot_aug_8</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_aug_8</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-44-2.png" width="672" /></p>
+</div>
+<div id="non-fire-dates---november-22nd" class="section level4">
+<h4>Non fire dates - November 22nd</h4>
+<pre class="r"><code>trop_plot_nov_22</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_nov_22</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-45-2.png" width="672" /></p>
+</div>
+<div id="non-fire-dates---november-23rd" class="section level4">
+<h4>Non fire dates - November 23rd</h4>
+<pre class="r"><code>trop_plot_nov_23</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_nov_23</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-46-2.png" width="672" /></p>
+</div>
+<div id="non-fire-dates---november-28th" class="section level4">
+<h4>Non fire dates - November 28th</h4>
+<pre class="r"><code>trop_plot_nov_28</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_nov_28</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-47-2.png" width="672" /></p>
+</div>
+<div id="fire-dates---november-11th" class="section level4">
+<h4>Fire dates - November 11th</h4>
+<pre class="r"><code>trop_plot_nov_11</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
+<pre class="r"><code>interp_plot_nov_11</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-48-2.png" width="672" /></p>
+</div>
+</div>
+<div id="statistical-analysis" class="section level1">
+<h1>Statistical Analysis</h1>
+<p>Now since the data is ready, the next step would be going with statistical analysis. Firstly, going with regression analysis. This would involve creating a regression model between TROPOMI and GEOS-CF interpolated TROPOMI data and thereby comparing their correlation coefficients. The regression analysis is as shown below:</p>
+<div id="regression-analysis" class="section level2">
+<h2>Regression Analysis</h2>
+<div id="august-5" class="section level3">
+<h3>August</h3>
+<div id="non-fire-dates" class="section level4">
+<h4>Non-fire dates</h4>
+<pre class="r"><code>lm_data_frame_aug_18 &lt;- data.frame(&quot;TROPOMI&quot; = c(fire_date_plot_aug_18[&#39;NO2_Concentration&#39;]), &quot;GEOS-INTERP_tropomi&quot; = c(plot_data_interp_aug_18[&#39;z_Con_interp_nov&#39;]))
+linearMod_aug_18 &lt;- lm(NO2_Concentration ~z_Con_interp_nov, data=lm_data_frame_aug_18)
+
+lm_data_frame_aug_24&lt;- data.frame(&quot;TROPOMI&quot; = c(fire_date_plot_aug_24[&#39;NO2_Concentration&#39;]), &quot;GEOS-INTERP_tropomi&quot; = c(plot_data_interp_aug_24[&#39;z_Con_interp_nov&#39;]))
+linearMod_aug_24 &lt;- lm(NO2_Concentration ~z_Con_interp_nov, data=lm_data_frame_aug_24)
+
+lm_data_frame_aug_25 &lt;- data.frame(&quot;TROPOMI&quot; = c(fire_date_plot_aug_25[&#39;NO2_Concentration&#39;]), &quot;GEOS-INTERP_tropomi&quot; = c(plot_data_interp_aug_25[&#39;z_Con_interp_nov&#39;]))
+linearMod_aug_25 &lt;- lm(NO2_Concentration ~z_Con_interp_nov, data=lm_data_frame_aug_25)</code></pre>
+</div>
+<div id="fire-dates" class="section level4">
+<h4>Fire dates</h4>
+<pre class="r"><code>lm_data_frame_aug_8 &lt;- data.frame(&quot;TROPOMI&quot; = c(fire_date_plot_aug_8[&#39;NO2_Concentration&#39;]), &quot;GEOS-INTERP_tropomi&quot; = c(plot_data_interp_aug_8[&#39;z_Con_interp&#39;]))
+linearMod_aug_8 &lt;- lm(NO2_Concentration ~z_Con_interp, data=lm_data_frame_aug_8)</code></pre>
+</div>
+<div id="non-fire-dates-1" class="section level4">
+<h4>Non-fire dates</h4>
+<pre class="r"><code>xval_aug_18 &lt;- lm_data_frame_aug_18[&#39;NO2_Concentration&#39;]
+yval_aug_18 &lt;- lm_data_frame_aug_18[&#39;z_Con_interp_nov&#39;]
+x2_aug_18 &lt;- data.frame(yval_aug_18,xval_aug_18)
+
+xval_aug_24 &lt;- lm_data_frame_aug_24[&#39;NO2_Concentration&#39;]
+yval_aug_24 &lt;- lm_data_frame_aug_24[&#39;z_Con_interp_nov&#39;]
+x2_aug_24 &lt;- data.frame(yval_aug_24,xval_aug_24)
+
+xval_aug_25 &lt;- lm_data_frame_aug_25[&#39;NO2_Concentration&#39;]
+yval_aug_25 &lt;- lm_data_frame_aug_25[&#39;z_Con_interp_nov&#39;]
+x2_aug_25 &lt;- data.frame(yval_aug_25,xval_aug_25)</code></pre>
+</div>
+<div id="fire-dates-1" class="section level4">
+<h4>Fire dates</h4>
+<pre class="r"><code>xval &lt;- lm_data_frame_aug_8[&#39;NO2_Concentration&#39;]
+yval &lt;- lm_data_frame_aug_8[&#39;z_Con_interp&#39;]
+x2 &lt;- data.frame(yval,xval)</code></pre>
+</div>
+</div>
+<div id="november-6" class="section level3">
+<h3>November</h3>
+<div id="non-fire-dates-2" class="section level4">
+<h4>Non-fire dates</h4>
+<pre class="r"><code>lm_data_frame_nov_22 &lt;- data.frame(&quot;TROPOMI&quot; = c(fire_date_plot_nov_22[&#39;NO2_Concentration_nov&#39;]), &quot;GEOS-INTERP_tropomi&quot; = c(plot_data_interp_nov_22[&#39;z_Con_interp_nov&#39;]))
+linearMod_nov_22 &lt;- lm(NO2_Concentration_nov ~z_Con_interp_nov, data=lm_data_frame_nov_22)
+
+lm_data_frame_nov_23 &lt;- data.frame(&quot;TROPOMI&quot; = c(fire_date_plot_nov_23[&#39;NO2_Concentration_nov&#39;]), &quot;GEOS-INTERP_tropomi&quot; = c(plot_data_interp_nov_23[&#39;z_Con_interp_nov&#39;]))
+linearMod_nov_23 &lt;- lm(NO2_Concentration_nov ~z_Con_interp_nov, data=lm_data_frame_nov_23)
+
+lm_data_frame_nov_28 &lt;- data.frame(&quot;TROPOMI&quot; = c(fire_date_plot_nov_28[&#39;NO2_Concentration_nov&#39;]), &quot;GEOS-INTERP_tropomi&quot; = c(plot_data_interp_nov_28[&#39;z_Con_interp_nov&#39;]))
+linearMod_nov_28 &lt;- lm(NO2_Concentration_nov ~z_Con_interp_nov, data=lm_data_frame_nov_28)</code></pre>
+</div>
+<div id="fire-dates-2" class="section level4">
+<h4>Fire dates</h4>
+<pre class="r"><code>lm_data_frame_nov_11 &lt;- data.frame(&quot;TROPOMI&quot; = c(fire_date_plot_nov_11[&#39;NO2_Concentration_nov&#39;]), &quot;GEOS-INTERP_tropomi&quot; = c(plot_data_interp_nov_11[&#39;z_Con_interp_nov&#39;]))
+linearMod_nov_11 &lt;- lm(NO2_Concentration_nov ~z_Con_interp_nov, data=lm_data_frame_nov_11)</code></pre>
+</div>
+<div id="non-fire-dates-3" class="section level4">
+<h4>Non-fire dates</h4>
+<pre class="r"><code>xval_nov_22 &lt;- lm_data_frame_nov_22[&#39;NO2_Concentration_nov&#39;]
+yval_nov_22 &lt;- lm_data_frame_nov_22[&#39;z_Con_interp_nov&#39;]
+x2_nov_22 &lt;- data.frame(yval_nov_22,xval_nov_22)
+
+xval_nov_23 &lt;- lm_data_frame_nov_23[&#39;NO2_Concentration_nov&#39;]
+yval_nov_23 &lt;- lm_data_frame_nov_23[&#39;z_Con_interp_nov&#39;]
+x2_nov_23 &lt;- data.frame(yval_nov_23,xval_nov_23)
+
+xval_nov_28 &lt;- lm_data_frame_nov_28[&#39;NO2_Concentration_nov&#39;]
+yval_nov_28 &lt;- lm_data_frame_nov_28[&#39;z_Con_interp_nov&#39;]
+x2_nov_28 &lt;- data.frame(yval_nov_28,xval_nov_28)</code></pre>
+</div>
+<div id="fire-dates-3" class="section level4">
+<h4>Fire dates</h4>
+<pre class="r"><code>xval &lt;- lm_data_frame_nov_11[&#39;NO2_Concentration_nov&#39;]
+yval &lt;- lm_data_frame_nov_11[&#39;z_Con_interp_nov&#39;]
+x2_nov_11 &lt;- data.frame(yval,xval)</code></pre>
+<p>Also, error analysis would be conducted for the above data sets. TROPOMI values are predicted based on the model and bias is calculated between predicted values and original values, plots are constructed between the error (e) and predicted values, these plots help us in understanding the trend in errors.</p>
+</div>
+</div>
+</div>
+<div id="error-analysis" class="section level2">
+<h2>Error Analysis</h2>
+<div id="august-6" class="section level3">
+<h3>August</h3>
+<div id="non-fire-dates-4" class="section level4">
+<h4>Non-fire dates</h4>
+<pre class="r"><code>new.values_aug_18 &lt;- data.frame(values = c(lm_data_frame_aug_18[&#39;z_Con_interp_nov&#39;]))
+predicted_values_tropomi_aug_18 &lt;- predict(linearMod_aug_18, newdata = new.values_aug_18)
+bias_1_aug_18 &lt;- mean(predicted_values_tropomi_aug_18- lm_data_frame_aug_18$NO2_Concentration)
+
+new.values_aug_24 &lt;- data.frame(values = c(lm_data_frame_aug_24[&#39;z_Con_interp_nov&#39;]))
+predicted_values_tropomi_aug_24 &lt;- predict(linearMod_aug_24, newdata = new.values_aug_24)
+bias_1_aug_24 &lt;- mean(predicted_values_tropomi_aug_24- lm_data_frame_aug_24$NO2_Concentration)
+
+new.values_aug_25 &lt;- data.frame(values = c(lm_data_frame_aug_25[&#39;z_Con_interp_nov&#39;]))
+predicted_values_tropomi_aug_25 &lt;- predict(linearMod_aug_25, newdata = new.values_aug_25)
+bias_1_aug_25 &lt;- mean(predicted_values_tropomi_aug_25- lm_data_frame_aug_25$NO2_Concentration)</code></pre>
+</div>
+<div id="fire-dates-4" class="section level4">
+<h4>Fire dates</h4>
+<pre class="r"><code>#predicting values based on linear model  
+new.values_aug_8 &lt;- data.frame(values = c(lm_data_frame_aug_8[&#39;z_Con_interp&#39;]))
+predicted_values_tropomi_aug_8 &lt;- predict(linearMod_aug_8, newdata = new.values_aug_8)
+bias_1_aug_8 &lt;- predicted_values_tropomi_aug_8- fire_date_plot_aug_8$NO2_Concentration
+bias_aug_8 &lt;- mean(bias_1_aug_8)  </code></pre>
+</div>
+</div>
+<div id="november-7" class="section level3">
+<h3>November</h3>
+<div id="non-fire-dates-5" class="section level4">
+<h4>Non fire dates</h4>
+<pre class="r"><code>new.values_nov_22 &lt;- data.frame(values = c(lm_data_frame_nov_22[&#39;z_Con_interp_nov&#39;]))
+predicted_values_tropomi_nov_22 &lt;- predict(linearMod_nov_22, newdata = new.values_nov_22)
+bias_1_nov_22 &lt;- mean(predicted_values_tropomi_nov_22- lm_data_frame_nov_22$NO2_Concentration_nov)
+
+new.values_nov_23 &lt;- data.frame(values = c(lm_data_frame_nov_23[&#39;z_Con_interp_nov&#39;]))
+predicted_values_tropomi_nov_23 &lt;- predict(linearMod_nov_23, newdata = new.values_nov_23)
+bias_1_nov_23 &lt;- mean(predicted_values_tropomi_nov_23- lm_data_frame_nov_23$NO2_Concentration_nov)
+
+new.values_nov_28 &lt;- data.frame(values = c(lm_data_frame_nov_28[&#39;z_Con_interp_nov&#39;]))
+predicted_values_tropomi_nov_28 &lt;- predict(linearMod_nov_28, newdata = new.values_nov_28)
+bias_1_nov_28 &lt;- mean(predicted_values_tropomi_nov_28- lm_data_frame_nov_28$NO2_Concentration_nov)</code></pre>
+</div>
+<div id="fire-dates-5" class="section level4">
+<h4>Fire dates</h4>
+<pre class="r"><code>new.values_nov_11 &lt;- data.frame(values = c(lm_data_frame_nov_11[&#39;z_Con_interp_nov&#39;]))
+predicted_values_tropomi_nov_11 &lt;- predict(linearMod_nov_11, newdata = new.values_nov_11)
+bias_1_nov_11 &lt;- predicted_values_tropomi_nov_11- fire_date_plot_nov_11$NO2_Concentration_nov
+bias_nov_11 &lt;- mean(bias_1_nov_11)  </code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="results-and-discussions" class="section level1">
+<h1>Results and Discussions</h1>
+<div id="regression-bias-and-error-analysis" class="section level2">
+<h2>Regression, Bias and Error Analysis</h2>
+<p><img src="Proj_files/figure-html/chunk-name-1.png" width="672" /></p>
+<pre class="r"><code>r2_plot </code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-65-1.png" width="672" /></p>
+<pre class="r"><code>geos_conc_plot</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-65-2.png" width="672" /></p>
+<pre class="r"><code>trop_conc_plot</code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-65-3.png" width="672" /></p>
+<pre class="r"><code>bias_plot </code></pre>
+<p><img src="Proj_files/figure-html/unnamed-chunk-65-4.png" width="672" /></p>
+<p>The above shown tropomi and geos interpolated tropomi plots show that concentrations of NO<sub>2</sub> were high on days which had significant amount of fire counts as compared to the days which didn’t have any fire counts. This leads to a conclusion that concentration of NO<sub>2</sub> is directly correlated with fire counts.</p>
+<p>r2 here represents the correlation coefficient between TROPOMI data and predicted TROPOMI data, i.e., which is based on the regression models. When we observe the r2 plot we can see that the correlation coefficient is high for the days which doesn’t have any fire counts as compared to the days which have significant amount of fire counts, this shows that linear regression model fits good for days which have a low mean NO<sub>2</sub> concentration than for days that have high mean NO<sub>2</sub> concentration. We can also say that linear regression fits best for the days which don’t have any fire counts as compared to the days which have fire counts.</p>
+<p>From the bias plot we can also say that TROPOMI and GEOS-Interpolated TROPOMI NO<sub>2</sub> data correlated to a grater extent for days which didn’t have fire counts as compared with the days that had fire counts.</p>
+<p>The plots between residuals and predicted values can be analyzed for heterostedaticity, whenever their is inconsistency in predicting the values according to the model, i.e., whenever the model serves to be accurate for lower values and fails for higher values, it would be accounted for a case of heterostedaticity. In this case the model could not longer be considered as accurate.</p>
+<p>The above statements could lead us to a conclusion that satellite and TROPOMI data correlated well for non-fire days as compared to the days which had fire counts.</p>
+</div>
+</div>
+
+<!-- give the footer some space -->
+<br/>
+<br/>
+
+<footer id="site-footer">
+  <div id="footer1">
+  This website is a project for Adam Wilson's <a href="https://wilsonlab.io/GEO511"><i> Spatial Data Science (GEO511) </i></a>Course at the University at Buffalo
+  </div>
+  <div id="footer2">
+  <a rel="license" property="http://creativecommons.org/ns#license"
+  href="http://creativecommons.org/licenses/by/4.0/" ><img src="img/cc-by.svg" alt="cc-by"/></a> 
+  </div>
+</footer>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+
+</body>
+</html>
