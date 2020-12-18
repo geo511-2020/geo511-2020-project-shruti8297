@@ -919,7 +919,12 @@ The plots between residuals and predicted values can be analyzed for heterosteda
 The above statements could lead us to a conclusion that satellite and TROPOMI data correlated well for non-fire days as compared to the days which had fire counts. 
 
 
+# References 
 
+1. https://disc.gsfc.nasa.gov/
+2. https://portal.nccs.nasa.gov/datashare/gmao/geos-cf/v1/das/
+3. https://firms.modaps.eosdis.nasa.gov/download/
+4. https://worldview.earthdata.nasa.gov/
 
 
 
